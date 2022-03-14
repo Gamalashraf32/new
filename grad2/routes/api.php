@@ -36,4 +36,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
 #===========================================ShopOwner=================================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
     Route::post('choose-theme', 'ThemeController@chooseTheme');
+    Route::post('add-category', 'CategoryController@addCategory');
+    Route::post('add-product', 'CategoryController@addProduct');
 });
