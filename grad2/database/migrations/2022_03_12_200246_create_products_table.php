@@ -22,6 +22,7 @@ class CreateProductsTable extends Migration
             $table->text('description');
             $table->double('price', 8, 2);
             $table->string('image');
+            $table->dropColumn('image');
             $table->string('brand');
             $table->mediumInteger('quantity');
             $table->timestamps();

@@ -38,4 +38,5 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => '
     Route::post('choose-theme', 'ThemeController@chooseTheme');
     Route::post('add-category', 'CategoryController@addCategory');
     Route::post('add-product', 'CategoryController@addProduct');
+    Route::post('add-customer', 'CategoryController@addcustomer');
 });

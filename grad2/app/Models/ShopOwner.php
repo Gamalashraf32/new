@@ -49,8 +49,5 @@ class ShopOwner extends Authenticatable implements JWTSubject
         return $this->belongsTo(Plan::class);
     }
 
-    public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Theme::class);
-    }
+
 }

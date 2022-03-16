@@ -16,4 +16,8 @@ class Shop extends Model
     {
         return $this->belongsTo(ShopOwner::class);
     }
+    public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Theme::class);
+    }
 }

@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Theme extends Model
+class Productimage extends Model
 {
     use HasFactory;
-
-    public function shops()
+    public function product()
     {
-        return $this->hasMany(Shop::class);
+        return $this->belongsTo(Product::class);
     }
 }

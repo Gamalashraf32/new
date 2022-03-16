@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +14,6 @@ class CreateShopOwnersTable extends Migration
     {
         Schema::create('shop_owners', function (Blueprint $table) {
             $table->id();
-
             $table->string('first_name');
             $table->string('second_name');
             $table->string('email');
@@ -27,8 +25,6 @@ class CreateShopOwnersTable extends Migration
             $table->string('government');
             $table->string('city');
             $table->boolean('is_active')->default(1);
-
-
             $table->timestamps();
         });
     }
