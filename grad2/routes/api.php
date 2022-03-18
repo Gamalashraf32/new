@@ -48,4 +48,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => '
 Route::get('options','GeneralController@options');
 Route::group(['namespace' => 'App\Http\Controllers\Api'], function () {
     Route::get('options','GeneralController@options');
+    Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
+    Route::post('add-customer', 'CRUDCustomerController@addcustomer');
+    Route::get('show-customer', 'CRUDCustomerController@showcustomer');
+    Route::post('update-customer/{id}', 'CRUDCustomerController@update');
+    Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
 });
