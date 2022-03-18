@@ -15,7 +15,7 @@ class CreateProductimagesTable extends Migration
     {
         Schema::create('productimages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->on('products')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('image');

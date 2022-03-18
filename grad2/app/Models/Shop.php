@@ -20,4 +20,9 @@ class Shop extends Model
     {
         return $this->belongsTo(Theme::class);
     }
+
+    public function discountcode(): HasMany
+    {
+        return $this->hasMany(DiscountCode::class);
+    }
 }

@@ -14,7 +14,7 @@ class AddPlanIdToShopOwnersTable extends Migration
     public function up()
     {
         Schema::table('shop_owners', function (Blueprint $table) {
-            $table->unsignedBigInteger('plan_id');
+            $table->unsignedBigInteger('plan_id')->nullable();
             $table->foreign('plan_id')->on('plans')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();
         });
