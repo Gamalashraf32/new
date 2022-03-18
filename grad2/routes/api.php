@@ -43,14 +43,15 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => '
     Route::post('add-product', 'CategoryController@addProduct');
     Route::post('add-variant', 'CategoryController@addvariant');
     Route::post('add-option', 'CategoryController@addoption');
-});
-#===========================================general requests=================================================
-Route::get('options','GeneralController@options');
-Route::group(['namespace' => 'App\Http\Controllers\Api'], function () {
-    Route::get('options','GeneralController@options');
     Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
     Route::post('add-customer', 'CRUDCustomerController@addcustomer');
     Route::get('show-customer', 'CRUDCustomerController@showcustomer');
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');
     Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
+});
+#===========================================general requests=================================================
+Route::get('options','GeneralController@options');
+Route::group(['namespace' => 'App\Http\Controllers\Api'], function () {
+    Route::get('options','GeneralController@options');
+
 });
