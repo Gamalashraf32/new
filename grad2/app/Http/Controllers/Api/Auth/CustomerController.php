@@ -48,7 +48,7 @@ class CustomerController extends Controller
             'first_name' => 'required',
             'second_name' => 'required',
             'email' => 'required',
-            'password' => 'required|confirmed',
+            'password' => 'required',
             'phone_number' => 'required',
         ]);
 
@@ -68,6 +68,8 @@ class CustomerController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request['password']),
             'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'shop_id' => $request->shop_id,
         ]);
 
         $token = auth('api')->attempt(['email' => $request['email'], 'password' => $request['password']]);

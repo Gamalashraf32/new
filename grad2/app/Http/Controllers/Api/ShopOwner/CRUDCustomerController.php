@@ -75,7 +75,7 @@ class CRUDCustomerController extends Controller
         }
         $customer->update($request->all());
         if ($customer) {
-            return $this->returnData('Product saved', new gamal($customer), 201);
+            return $this->returnData('Product saved', $customer, 201);
         }
         return $this->returnError('Product not saved', 400);
     }
