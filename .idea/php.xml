@@ -116,6 +116,7 @@
       <path value="$PROJECT_DIR$/grad2/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/grad2/vendor/psr/container" />
       <path value="$PROJECT_DIR$/grad2/vendor/composer" />
+      <path value="$PROJECT_DIR$/grad2/vendor/intervention/image" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1">

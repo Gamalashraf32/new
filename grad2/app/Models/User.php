@@ -26,6 +26,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'phone_number',
+        'address',
+        'shop_id',
 
     ];
 
@@ -58,8 +60,5 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function customer(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Customer::class);
-    }
+
 }

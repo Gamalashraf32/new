@@ -25,7 +25,7 @@ class ThemeController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $user = auth('shop_owner')->user();
+        $user = auth('shop_owner')->user()->shop()->first();
         $user->theme_id = $request->theme_id;
         $user->save();
         return $this->returnSuccess('theme saved successfully', 200);

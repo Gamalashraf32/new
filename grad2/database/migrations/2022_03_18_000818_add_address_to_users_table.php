@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddThemeIdToShopOwnersTable extends Migration
+class AddAddressToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddThemeIdToShopOwnersTable extends Migration
      */
     public function up()
     {
-        Schema::table('shop_owners', function (Blueprint $table) {
-            $table->unsignedBigInteger('theme_id')->nullable();
-            $table->foreign('theme_id')->on('themes')->references('id')
-                ->cascadeOnDelete()->cascadeOnUpdate();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('address');
         });
     }
 
@@ -27,7 +25,7 @@ class AddThemeIdToShopOwnersTable extends Migration
      */
     public function down()
     {
-        Schema::table('shop_owners', function (Blueprint $table) {
+        Schema::table('user', function (Blueprint $table) {
             //
         });
     }
