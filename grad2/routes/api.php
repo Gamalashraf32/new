@@ -38,6 +38,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => '
     Route::post('choose-theme', 'ThemeController@chooseTheme');
     Route::post('add-category', 'CategoryController@addCategory');
     Route::post('add-product', 'CategoryController@addProduct');
-    Route::post('add-customer', 'CategoryController@addcustomer');
     Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
+    Route::post('add-customer', 'CRUDCustomerController@addcustomer');
+    Route::get('show-customer', 'CRUDCustomerController@showcustomer');
+    Route::post('update-customer/{id}', 'CRUDCustomerController@update');
+    Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
 });

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    use ResponseTrait,ImageUpload;
+    use ResponseTrait, ImageUpload;
 
     public function addCategory(Request $request)
     {
@@ -60,7 +60,7 @@ class CategoryController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-       $product= Product::create([
+        $product = Product::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'description' => $request->description,
@@ -70,8 +70,8 @@ class CategoryController extends Controller
         ]);
 
         Productimage::create([
-           'product_id'=>$product->id,
-            'image'=> $this->uploadImage($request->file('image'), 'products-images', 60)
+            'product_id' => $product->id,
+            'image' => $this->uploadImage($request->file('image'), 'products-images', 60)
         ]);
 
 
