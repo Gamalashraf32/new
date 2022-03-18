@@ -25,9 +25,14 @@ class ThemeController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $user = auth('shop_owner')->user();
-        $user->theme_id = $request->theme_id;
-        $user->save();
+        $user = auth('shop_owner')->user()->shop()->first();
+        if(auth('shop_owner')->user()) {
+            $user->theme_id = $request->theme_id;
+            $user->save();
+        }
+        else{
+            return $this->returnError('you are not authorized to edit this data', 401, false);
+        }
         return $this->returnSuccess('theme saved successfully', 200);
     }
 }

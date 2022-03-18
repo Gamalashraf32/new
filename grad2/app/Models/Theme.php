@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Theme extends Model
 {
     use HasFactory;
-
-    public function shop_owners()
+    public function shops()
     {
-        return $this->hasMany(ShopOwner::class);
+        return $this->hasMany(Shop::class);
     }
 }

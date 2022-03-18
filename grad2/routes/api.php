@@ -37,5 +37,15 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
 Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
     Route::post('choose-theme', 'ThemeController@chooseTheme');
     Route::post('add-category', 'CategoryController@addCategory');
+    Route::post('update-category/{id}', 'CategoryController@updateCategory');
+    Route::get('delete-category/{id}', 'CategoryController@deletecat');
+    Route::get('show-category', 'CategoryController@showcat');
     Route::post('add-product', 'CategoryController@addProduct');
+    Route::post('add-variant', 'CategoryController@addvariant');
+    Route::post('add-option', 'CategoryController@addoption');
+});
+#===========================================general requests=================================================
+Route::get('options','GeneralController@options');
+Route::group(['namespace' => 'App\Http\Controllers\Api'], function () {
+    Route::get('options','GeneralController@options');
 });

@@ -14,7 +14,6 @@ trait ImageUpload
         $file_extension = $image->getClientOriginalExtension();
         $file_name = Str::random(20) . '.' . $file_extension;
         $path = 'gmS1gBS6N1plepfpcPCi/uploaded/' . $directory;
-        $path_without_prefix = 'uploaded/' . $directory;
         if (!is_dir($path)) {
             mkdir($path, 0777, true);
         }
@@ -27,7 +26,7 @@ trait ImageUpload
         }
 
         $image_resize->save($path . '/' . $file_name, $quality);
-        return $path_without_prefix . '/' . $file_name;
+        return $path . '/' . $file_name;
     }
 
 }
