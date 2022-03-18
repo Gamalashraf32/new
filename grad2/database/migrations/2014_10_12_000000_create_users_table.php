@@ -26,6 +26,10 @@ class CreateUsersTable extends Migration
             $table->integer('total_spent')->nullable();
             $table->integer('balance')->nullable();
             $table->string('payment_method')->nullable();
+            $table->string('address');
+            $table->unsignedBigInteger('shop_id');
+            $table->foreign('shop_id')->on('shops')->references('id')
+                ->cascadeOnDelete()->cascadeOnUpdate();
             $table->rememberToken();
             $table->timestamps();
         });
