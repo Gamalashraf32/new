@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class CreateDiscountCodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,17 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('discount_codes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('shop_id')->nullable();
             $table->foreign('shop_id')->on('shops')->references('id')
-                ->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('name');
-            $table->text('description');
+            ->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('code')->unique();
+            $table->string('type');
+            $table->integer('value');
+            $table->integer('minimum_requirements_value')->default('0');
+            $table->date('starts_at');
+            $table->date('ends_at');
             $table->timestamps();
         });
     }
@@ -31,6 +35,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('discount_codes');
     }
 }
