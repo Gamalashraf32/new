@@ -42,4 +42,46 @@ class DiscountCodeController extends Controller
         ]);
         return $this->returnSuccess("Discount code added successfully",200);
     }
+
+    public function deletediscount($id)
+    {
+        $discount = Discountcode::find($id);
+        if(!$discount)
+        {
+            return $this->returnError("This code not exist",400);
+        }
+        $discount->delete($id);
+        return $this->returnSuccess("Discount code deleted",200);
+    }
+
+    public function showall()
+    {
+        $discount = Discountcode::all();
+        if(!$discount)
+        {
+            return $this->returnError("No Discount codes exists",400);
+        }
+        return $this->returnData("Your codes",$discount,200);
+    }
+
+    public function update( $id ,Request $request)
+    {
+        $discount = Discountcode::find($id);
+        if(!$discount)
+        {
+            return $this->returnError("This code not exist",400);
+        }
+        $discount->update($request->all());
+        return $this->returnSuccess("Discount Code updated",200);
+    }
+
+    public function showone($id)
+    {
+        $discount = Discountcode::find($id);
+        if(!$discount)
+        {
+            return $this->returnError("No Discount codes exists",400);
+        }
+        return $this->returnData("Your code" ,$discount,200);
+    }
 }
