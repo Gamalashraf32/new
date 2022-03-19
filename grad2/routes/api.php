@@ -53,6 +53,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => '
     Route::post('delete-variant/{id}', 'CategoryController@deletevariant');
     Route::get('show-variant', 'CategoryController@showvariant');
     Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
+    Route::post('delete-discountcode/{id}', 'DiscountCodeController@deletediscount');
+    Route::get('show', 'DiscountCodeController@showall');
+    Route::post('update-discountcode/{id}', 'DiscountCodeController@update');
+    Route::get('showone/{id}', 'DiscountCodeController@showone');
+#========================================Discount==================================================
     Route::post('add-customer', 'CRUDCustomerController@addcustomer');
    // Route::get('show-customer', 'CRUDCustomerController@showcustomer');
     Route::get('show-customer/{id}', 'CRUDCustomerController@showcustomerwithid');
