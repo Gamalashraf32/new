@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\gamal;
+use App\Http\Resources\ShowCustomerByID;
 
 class CRUDCustomerController extends Controller
 {
@@ -65,11 +66,25 @@ class CRUDCustomerController extends Controller
         return $this->returnError('Customers dose not exists', 404);
     }
 
+    public function showcustomerwithid($id)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+
+        $customers = User::where([['shop_id', $shop_id->id]])->find($id);
+
+        if ($customers) {
+            return $this->returnData('ok', new ShowCustomerByID($customers), 400);
+        }
+        return $this->returnError('Customers dose not exists', 404);
+    }
 
     public function update(Request $request, $id)
     {
 
-        $customer = User::find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+
+        $customer = User::where([['shop_id', $shop_id->id]])->first()->find($id);
+
         if (!$customer) {
             return $this->returnError('Customer dose not exists', 404);
         }
@@ -83,7 +98,10 @@ class CRUDCustomerController extends Controller
 
     public function delete($id)
     {
-        $customer = User::find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+
+        $customer = User::where([['shop_id', $shop_id->id]])->first()->find($id);
+
         if (!$customer) {
             return $this->returnError('Customer dose not exists', 404);
         }
@@ -91,4 +109,3 @@ class CRUDCustomerController extends Controller
         return $this->returnSuccess('Customer deleted', 200);
     }
 }
-

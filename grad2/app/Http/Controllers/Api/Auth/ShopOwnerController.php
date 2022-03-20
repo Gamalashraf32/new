@@ -52,7 +52,7 @@ class ShopOwnerController extends Controller
             'plan_id' => 'required',
             'first_name' => 'required',
             'second_name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:shop_owners',
             'password' => 'required|confirmed',
             'phone_number' => 'required',
             'site_name' => 'required',
