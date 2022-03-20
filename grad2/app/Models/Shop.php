@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
 class Shop extends Model
 {
     protected $fillable = [
@@ -18,7 +17,7 @@ class Shop extends Model
         return $this->belongsTo(ShopOwner::class);
     }
 
-    public function user(): HasOne
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(theme::class);
     }

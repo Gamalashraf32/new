@@ -51,7 +51,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-variant/{id}', 'CategoryController@updatevariant');
     Route::post('delete-variant/{id}', 'CategoryController@deletevariant');
     Route::get('show-variant', 'CategoryController@showvariant');
-    #========================================Discount==================================================
+#========================================Discount==================================================
     Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
     Route::post('delete-discountcode/{id}', 'DiscountCodeController@deletediscount');
     Route::get('show', 'DiscountCodeController@showall');
