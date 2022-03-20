@@ -11,7 +11,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
-class AssignGuard extends BaseMiddleware
+class Assignguard extends BaseMiddleware
 {
     use ResponseTrait;
 

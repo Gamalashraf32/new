@@ -33,9 +33,7 @@ class CategoryController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        if (!auth('shop_owner')->user()) {
-            return $this->returnError('you are not authorized to edit this data', 401, false);
-        }
+
         $shop_id = auth('shop_owner')->user()->shop()->first();
 
         Category::create([
@@ -64,9 +62,7 @@ class CategoryController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        if (!auth('shop_owner')->user()) {
-            return $this->returnError('you are not authorized to edit this data', 401, false);
-        }
+
         $shop_id = auth('shop_owner')->user()->shop()->first();
 
 
@@ -87,9 +83,7 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function deletecat($id)
     {
-        if (!auth('shop_owner')->user()) {
-            return $this->returnError('you are not authorized to edit this data', 401, false);
-        }
+
         $shop_id = auth('shop_owner')->user()->shop()->first();
 
         $cat = Category::where([['shop_id', $shop_id->id]])->first()->find($id);
@@ -105,9 +99,7 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function showcat()
     {
-        if (!auth('shop_owner')->user()) {
-            return $this->returnError('you are not authorized to show this data', 401, false);
-        }
+
         $shop_id = auth('shop_owner')->user()->shop()->first();
 
         $cat = Category::where([['shop_id', $shop_id->id]])->get();
@@ -139,9 +131,7 @@ class CategoryController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        if (!auth('shop_owner')->user()) {
-            return $this->returnError('you are not authorized to edit this data', 401, false);
-        }
+
         $product = Product::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
@@ -163,10 +153,9 @@ class CategoryController extends Controller
     public function updateProduct(Request $request,$id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id',$shop_id->id)->first();
+        $product = Product::where('category_id',$cat_id->id)->first()->find($id);
 
-        $product = User::where([['shop_id', $shop_id->id]])->first()->find($id);
-
-        $product=Product::find($id);
         if(!$product)
         {
             return $this->returnError('Product not found',404);
@@ -183,18 +172,23 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function deleteProduct($id)
     {
-        $product=Product::find($id);
+        $shop_id= auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id',$shop_id->id)->first();
+        $product = Product::where('category_id', $cat_id->id)->first()->find($id);
+       // dd($product);
         if(!$product)
         {
             return $this->returnError('Product not found',404);
         }
-        $product->delete($id);
+        $product->delete();
         return $this->returnSuccess('Product Deleted',200);
     }
 #==========================================================================================================================
     public function showProduct()
     {
-        $product = Product::all();
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id',$shop_id->id)->first();
+        $product = Product::where('category_id',$cat_id->id)->get();
         if($product)
         {
             return $this->returnData('ok',$product,200);
@@ -230,7 +224,10 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function updateoption(Request $request,$id)
     {
-        $option = Option::find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id', $shop_id->id)->first();
+        $product_id = Product::where('category_id', $cat_id->id)->first();
+        $option = Option::where('product_id', $product_id->id)->first()->find($id);
         if(!$option)
         {
             return $this->returnError('Option not found',404);
@@ -246,18 +243,25 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function deleteoption($id)
     {
-        $option = Option::find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id', $shop_id->id)->first();
+        $product_id = Product::where('category_id', $cat_id->id)->first();
+        $option = Option::where('product_id', $product_id->id)->first()->find($id);
+
         if(!$option)
         {
             return $this->returnError('Option not found',404);
         }
-        $option->delete($id);
+        $option->delete();
         return $this->returnSuccess('Option Deleted',200);
 }
 #==========================================================================================================================
     public function showoption()
     {
-        $option = Option::all();
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id', $shop_id->id)->first();
+        $product_id = Product::where('category_id', $cat_id->id)->first();
+        $option = Option::where('product_id', $product_id->id)->first();
         if($option){
             return $this->returnData('ok',$option,200);
         }
@@ -298,14 +302,15 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function updatevariant(Request $request,$id)
     {
-        $variant = ProductVariant::find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id', $shop_id->id)->first();
+        $product_id = Product::where('category_id', $cat_id->id)->first();
+        $option = Option::where('product_id', $product_id->id)->first();
+        $variant = ProductVariant::where('option_id',$option->id)->first()->find($id);
+
         if (!$variant) {
             return $this->returnError('Variant can not found', 404);
         }
-
-//        $variant->value = $request->value;
-//        $variant->quantity = $request->quantity;
-//        $variant->save();
 
         $variant->update($request->except(['option_id','product_id']));
 
@@ -319,18 +324,26 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function deletevariant($id)
     {
-        $variant = ProductVariant::find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $cat_id = Category::where('shop_id', $shop_id->id)->first();
+        $product_id = Product::where('category_id', $cat_id->id)->first();
+        $option = Option::where('product_id', $product_id->id)->first();
+        $variant = ProductVariant::where('option_id',$option->id)->first()->find($id);
         if (!$variant)
         {
             return $this->returnError('Variant not found',404);
         }
-        $variant->delete($id);
+        $variant->delete();
         return $this->returnSuccess('Variant deleted',200);
     }
 #==========================================================================================================================
     public function showvariant()
         {
-            $variant = ProductVariant::all();
+            $shop_id = auth('shop_owner')->user()->shop()->first();
+            $cat_id = Category::where('shop_id', $shop_id->id)->first();
+            $product_id = Product::where('category_id', $cat_id->id)->first();
+            $option = Option::where('product_id', $product_id->id)->first();
+            $variant = ProductVariant::where('option_id',$option->id)->first()->get();
             if($variant)
             {
                 return $this->returnData('ok ',$variant,200 );
