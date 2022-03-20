@@ -34,8 +34,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
     Route::post('logout', 'CustomerController@logout');
 });
 #===========================================ShopOwner=================================================
-Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
-    Route::post('choose-theme', 'ThemeController@chooseTheme');
+Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
     Route::post('add-category', 'CategoryController@addCategory');
     Route::post('update-category/{id}', 'CategoryController@updateCategory');
     Route::get('delete-category/{id}', 'CategoryController@deletecat');
@@ -50,6 +49,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => '
     Route::post('update-discountcode/{id}', 'DiscountCodeController@update');
     Route::get('showone/{id}', 'DiscountCodeController@showone');
 #========================================Discount==================================================
+#========================================Theme=====================================================
+    Route::post('chooseTheme', 'ThemeController@chooseTheme');
+    Route::post('update', 'ThemeController@update');
+#========================================Theme=====================================================
     Route::post('add-customer', 'CRUDCustomerController@addcustomer');
     Route::get('show-customer', 'CRUDCustomerController@showcustomer');
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');

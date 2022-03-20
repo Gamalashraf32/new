@@ -16,9 +16,10 @@ class Shop extends Model
     {
         return $this->belongsTo(ShopOwner::class);
     }
-    public function theme(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+
+    public function user(): HasOne
     {
-        return $this->belongsTo(Theme::class);
+        return $this->hasOne(theme::class);
     }
 
     public function discountcode(): HasMany

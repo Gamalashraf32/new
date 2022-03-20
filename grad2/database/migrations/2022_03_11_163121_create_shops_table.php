@@ -18,9 +18,6 @@ class CreateShopsTable extends Migration
             $table->unsignedBigInteger('shop_owner_id')->nullable();
             $table->foreign('shop_owner_id')->on('shop_owners')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();
-            $table->unsignedBigInteger('theme_id')->nullable();
-            $table->foreign('theme_id')->on('shops')->references('id')
-                ->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('currency')->default('egp');
             $table->string('swifter_domain')->nullable();
             $table->integer('has_discount')->default(1);
