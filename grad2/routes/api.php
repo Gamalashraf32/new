@@ -35,7 +35,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
 });
 #===========================================ShopOwner=================================================
 
-   
+
 Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
     Route::post('update-info', 'ShopOwnerInfoController@update');
     Route::post('add-category', 'CategoryController@addCategory');
@@ -66,7 +66,6 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update', 'ThemeController@update');
 #========================================Theme=====================================================
     Route::post('add-customer', 'CRUDCustomerController@addcustomer');
-   // Route::get('show-customer', 'CRUDCustomerController@showcustomer');
     Route::get('show-customer/{id}', 'CRUDCustomerController@showcustomerwithid');
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');
     Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
