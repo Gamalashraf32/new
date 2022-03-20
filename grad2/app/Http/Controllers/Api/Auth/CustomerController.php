@@ -58,6 +58,7 @@ class CustomerController extends Controller
                 $error = implode($message);
                 $errors[] = $error;
             }
+
             return $this->returnError(implode(' , ', $errors), 400);
         }
 

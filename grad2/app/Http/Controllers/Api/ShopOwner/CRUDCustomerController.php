@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\ShopOwner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use App\Models\User;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -38,6 +39,9 @@ class CRUDCustomerController extends Controller
             return $this->returnError(implode(' , ', $errors), 400);
         }
 
+        $user=auth('shop_owner')->user();
+        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
+
         if (auth('shop_owner')->user()) {
             User::create([
                 'first_name' => $request->first_name,
@@ -46,7 +50,7 @@ class CRUDCustomerController extends Controller
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'address' => $request->address,
-                'shop_id' => $request->shop_id,
+                'shop_id' => $shop_id,
             ]);
             return $this->returnSuccess('customer saved successfully', 200);
         } else {
@@ -58,7 +62,10 @@ class CRUDCustomerController extends Controller
 
     public function showcustomer()
     {
-        $customers = User::all();
+
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+
+        $customers = User::where([['shop_id', $shop_id->id]])->get();
 
         if ($customers) {
             return $this->returnData('ok', new gamal($customers), 400);
