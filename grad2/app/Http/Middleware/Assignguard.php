@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Traits\GeneralTrait;
 use App\Traits\ResponseTrait;
 use Closure;
 use http\Env\Request;
@@ -24,9 +23,23 @@ class AssignGuard extends BaseMiddleware
      * @return mixed
      */
 
-    public function handle($request, Closure $next, ...$guards)
+    public function handle($request, Closure $next, $guard = null)
     {
+        if($guard != null){
+            auth()->shouldUse($guard); //shoud you user guard / table
+            $token = $request->header('auth-token');
+            $request->headers->set('auth-token', (string) $token, true);
+            $request->headers->set('Authorization', 'Bearer '.$token, true);
+            try {
+                $user = JWTAuth::parseToken()->authenticate();
+                return $next($request);
+            } catch (TokenExpiredException $e) {
+                return  $this -> returnError('Unauthenticated user',401);
+            } catch (JWTException $e) {
+
+                return  $this -> returnError('token_invalid '.$e->getMessage(),400);
+            }
+        }
 
     }
-
 }

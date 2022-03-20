@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Theme;
+use App\Models\Shop;
 
 class ThemeController extends Controller
 {
@@ -14,7 +16,10 @@ class ThemeController extends Controller
     public function chooseTheme(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'theme_id' => 'required',
+            'name' => 'required',
+            'font' => 'required',
+            'primary_color' => 'required',
+            'secondary_color' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -25,14 +30,32 @@ class ThemeController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $user = auth('shop_owner')->user()->shop()->first();
-        if(auth('shop_owner')->user()) {
-            $user->theme_id = $request->theme_id;
-            $user->save();
-        }
-        else{
-            return $this->returnError('you are not authorized to edit this data', 401, false);
-        }
+        $user=auth('shop_owner')->user();
+        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
+        $theme=Theme::where('shop_id',$shop_id);
+        if(is_null($theme)){
+        $theme = Theme::Create([
+            'shop_id'=>$shop_id,
+            'name'=>$request->name,
+            'font'=>$request->font,
+            'primary_color'=>$request->primary_color,
+            'secondary_color'=>$request->secondary_color,
+        ]);
         return $this->returnSuccess('theme saved successfully', 200);
     }
+        else{
+            return $this->returnError("Theme Already Selected", 400);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        $user=auth('shop_owner')->user();
+        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
+        $id=Theme::where('shop_id',$shop_id)->value('id');
+        $theme=Theme::find($id);
+        $theme->update($request->all());
+        return $this->returnSuccess("Theme updated",200);
+    }
+
 }

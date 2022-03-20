@@ -8,8 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Theme extends Model
 {
     use HasFactory;
-    public function shops()
+    protected $fillable = [
+        'shop_id',
+        'name',
+        'font',
+        'primary_color',
+        'secondary_color',
+    ];
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Shop::class);
+        return $this->belongsTo(Shop::class);
     }
 }
