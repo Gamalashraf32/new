@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shop extends Model
 {
@@ -24,5 +25,9 @@ class Shop extends Model
     public function discountcode(): HasMany
     {
         return $this->hasMany(DiscountCode::class);
+    }
+    public function category()
+    {
+        return $this->hasMany(Category::class);
     }
 }

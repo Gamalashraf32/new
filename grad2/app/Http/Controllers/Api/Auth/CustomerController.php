@@ -17,7 +17,7 @@ class CustomerController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -45,11 +45,11 @@ class CustomerController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'second_name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'phone_number' => 'required',
+            'first_name' => 'required|string|min:3|max:255',
+            'second_name' => 'required|string|min:3|max:255',
+            'email' =>  'required|email|unique:users',
+            'password' => 'required|confirmed',
+            'phone_number' => 'required|unique:users|integer|min:11',
         ]);
 
         if ($validator->fails()) {

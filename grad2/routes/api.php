@@ -35,6 +35,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
 });
 #===========================================ShopOwner=================================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
+    Route::post('update-info', 'ShopOwnerInfoController@update');
     Route::post('choose-theme', 'ThemeController@chooseTheme');
     Route::post('add-category', 'CategoryController@addCategory');
     Route::post('update-category/{id}', 'CategoryController@updateCategory');

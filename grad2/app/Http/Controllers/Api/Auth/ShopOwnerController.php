@@ -22,7 +22,7 @@ class ShopOwnerController extends Controller
     public function login(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -50,16 +50,16 @@ class ShopOwnerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'plan_id' => 'required',
-            'first_name' => 'required',
-            'second_name' => 'required',
-            'email' => 'required',
+            'first_name' => 'required|string|min:3|max:255',
+            'second_name' => 'required|string|min:3|max:255',
+            'email' =>  'required|email|unique:shop_owners',
             'password' => 'required|confirmed',
-            'phone_number' => 'required',
-            'site_name' => 'required',
+            'phone_number' => 'required|unique:shop_owners|integer|min:11',
+            'site_name' => 'required|string|min:3|unique:shop_owners',
             'site_address' => 'required',
-            'country' => 'required',
-            'government' => 'required',
-            'city' => 'required',
+            'country' => 'required|string|min:3',
+            'government' => 'required|string|min:3',
+            'city' => 'required|string|min:3',
         ]);
 
         if ($validator->fails()) {
