@@ -43,13 +43,12 @@ class CustomerController extends Controller
 
     public function register(Request $request): \Illuminate\Http\JsonResponse
     {
-
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|min:3|max:255',
             'second_name' => 'required|string|min:3|max:255',
             'email' =>  'required|email|unique:users',
             'password' => 'required|confirmed',
-            'phone_number' => 'required|unique:users|integer|min:11',
+            'phone_number' => 'required|unique:users|min:11',
         ]);
 
         if ($validator->fails()) {

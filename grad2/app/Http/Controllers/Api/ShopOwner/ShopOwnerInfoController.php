@@ -16,8 +16,6 @@ class ShopOwnerInfoController extends Controller
     use ResponseTrait;
     public function update(Request $request)
     {
-
-        //dd($user);
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|min:3|max:255',
             'second_name' => 'required|string|min:3|max:255',

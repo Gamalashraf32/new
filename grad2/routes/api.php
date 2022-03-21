@@ -28,7 +28,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
 
 #===========================================Customer-auth============================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-customer'], function () {
-   
+
     Route::post('login', 'CustomerController@login');
     Route::post('register', 'CustomerController@register');
     Route::get('profile', 'CustomerController@profile');
@@ -88,6 +88,15 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');
     Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
 #========================================CRUDCustomer=====================================================
+
+#========================================shipping=====================================================
+Route::post('shipping-add', 'ShippingController@add');
+Route::post('shipping-update/{id}', 'ShippingController@update');
+Route::post('shipping-delete/{id}', 'ShippingController@delete');
+Route::get('shipping-show', 'ShippingController@show');
+#========================================shipping=====================================================
+
+
 });
 #===========================================general requests=================================================
 Route::get('options','GeneralController@options');

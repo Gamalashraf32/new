@@ -108,7 +108,7 @@ class CategoryController extends Controller
         }
 
 
-        return $this->returnData('category deleted successfully', $cat, 200);
+        return $this->returnData('your categories', $cat, 200);
     }
 
 }
