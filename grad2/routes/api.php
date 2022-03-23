@@ -72,9 +72,9 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 #========================================Discount==================================================
     Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
     Route::post('delete-discountcode/{id}', 'DiscountCodeController@deletediscount');
-    Route::get('show', 'DiscountCodeController@showall');
+    Route::get('show-discounts', 'DiscountCodeController@showall');
     Route::post('update-discountcode/{id}', 'DiscountCodeController@update');
-    Route::get('showone/{id}', 'DiscountCodeController@showone');
+    Route::get('show-discount/{id}', 'DiscountCodeController@showone');
 #========================================Discount==================================================
 
 #========================================Theme=====================================================
@@ -87,20 +87,21 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::get('show-customer/{id}', 'CRUDCustomerController@showcustomerwithid');
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');
     Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
+    Route::get('show-customer', 'CRUDCustomerController@showcustomer');
 #========================================CRUDCustomer=====================================================
 
 #========================================shipping=====================================================
-Route::post('shipping-add', 'ShippingController@add');
-Route::post('shipping-update/{id}', 'ShippingController@update');
-Route::post('shipping-delete/{id}', 'ShippingController@delete');
-Route::get('shipping-show', 'ShippingController@show');
+    Route::post('shipping-add', 'ShippingController@add');
+    Route::post('shipping-update/{id}', 'ShippingController@update');
+    Route::post('shipping-delete/{id}', 'ShippingController@delete');
+    Route::get('shipping-show', 'ShippingController@show');
 #========================================shipping=====================================================
 
-
-});
-#===========================================general requests=================================================
-Route::get('options','GeneralController@options');
-Route::group(['namespace' => 'App\Http\Controllers\Api'], function () {
-    Route::get('options','GeneralController@options');
-
+#========================================Order=====================================================
+    Route::post('add-order', 'OrderController@add_order');
+    Route::post('delete_order/{id}', 'OrderController@delete_order');
+    Route::post('update_order/{id}', 'OrderController@update');
+    Route::get('show-orders', 'OrderController@showall_orders');
+    Route::get('show-order/{id}', 'OrderController@show_order');
+#========================================Order=====================================================
 });
