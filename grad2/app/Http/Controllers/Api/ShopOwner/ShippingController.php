@@ -75,9 +75,17 @@ class ShippingController extends Controller
         if (!$ship) {
             return $this->returnError(' no shipping info yet', 404, true);
         }
-        return $this->returnData('your shipping info is', $ship, 200);
+        return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","created_at"]), 200);
     }
-
+    public function showid($id)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $ship= Shipping::where([['shop_id', $shop_id->id]])->first()->find($id);
+        if (!$ship) {
+            return $this->returnError(' no shipping like that', 404, true);
+        }
+        return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","crated_at"]), 200);
+    }
 
 }
 

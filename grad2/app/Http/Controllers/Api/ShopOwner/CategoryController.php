@@ -108,7 +108,17 @@ class CategoryController extends Controller
         }
 
 
-        return $this->returnData('your categories', $cat, 200);
+        return $this->returnData('your categories', $cat->makeHidden(['id','shop_id','created_at','updated_at']), 200);
     }
+#==========================================================================================================================
+    public function showcatid($id)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->first();
 
+        $cat = Category::where([['shop_id', $shop_id->id]])->first()->find($id);
+        if (!$cat) {
+            return $this->returnError(' category not found', 404, true);
+        }
+        return $this->returnData('chosen categories', $cat->makeHidden(['id','shop_id','created_at','updated_at']), 200);
+    }
 }

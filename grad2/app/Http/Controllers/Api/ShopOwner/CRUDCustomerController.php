@@ -40,7 +40,7 @@ class CRUDCustomerController extends Controller
         }
 
         $user=auth('shop_owner')->user();
-        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
+        $shop_id=Shop::where('shop_owner_id',$user->id)->first();
 
         if (auth('shop_owner')->user()) {
             User::create([
@@ -50,7 +50,7 @@ class CRUDCustomerController extends Controller
                 'phone_number' => $request->phone_number,
                 'password' => Hash::make($request->password),
                 'address' => $request->address,
-                'shop_id' => $shop_id,
+                'shop_id' => $shop_id->id,
             ]);
             return $this->returnSuccess('customer saved successfully', 200);
         } else {

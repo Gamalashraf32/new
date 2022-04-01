@@ -17,7 +17,7 @@ class Shop extends Model
         return $this->belongsTo(ShopOwner::class);
     }
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function theme(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(theme::class);
     }
@@ -29,5 +29,9 @@ class Shop extends Model
     public function category()
     {
         return $this->hasMany(Category::class);
+    }
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class);
     }
 }

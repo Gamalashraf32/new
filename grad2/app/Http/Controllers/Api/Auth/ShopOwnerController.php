@@ -49,7 +49,6 @@ class ShopOwnerController extends Controller
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'plan_id' => 'required',
             'first_name' => 'required|string|min:3|max:255',
             'second_name' => 'required|string|min:3|max:255',
             'email' =>  'required|email|unique:shop_owners,email',
@@ -74,7 +73,6 @@ class ShopOwnerController extends Controller
         DB::beginTransaction();
 
         $shop_owner = ShopOwner::create([
-            'plan_id' => $request->plan_id,
             'first_name' => $request->first_name,
             'second_name' => $request->second_name,
             'email' => $request->email,
@@ -100,9 +98,13 @@ class ShopOwnerController extends Controller
 
     public function profile()
     {
+//        $user = auth('shop_owner')->user();
+//        if (Carbon::make($user->expires_at)->lt(Carbon::now())) {
+//            $user->is_active = false;
+//            $user->save();
+//        }
         if (auth('shop_owner')->user()) {
-
-            return $this->returnData('shop_owner_info', auth('shop_owner')->user(), '200');
+            return $this->returnData('shop_owner_info', auth('shop_owner')->user()->makeHidden([ "created_at","updated_at"]), '200');
         } else {
             return $this->returnError('you are not authorized to show this data', 401, false);
         }

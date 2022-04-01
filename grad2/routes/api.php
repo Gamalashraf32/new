@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 #===========================================SuperAdmin-auth======================================
 Route::post('super-admin-login', 'App\Http\Controllers\Api\Auth\AdminController@login');
-
 #===========================================ShopOwner-auth========================================
 
 
@@ -25,7 +24,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
     Route::get('profile', 'ShopOwnerController@profile');
     Route::post('logout', 'ShopOwnerController@logout');
 });
-
 #===========================================Customer-auth============================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-customer'], function () {
 
@@ -46,6 +44,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-category/{id}', 'CategoryController@updateCategory');
     Route::get('delete-category/{id}', 'CategoryController@deletecat');
     Route::get('show-category', 'CategoryController@showcat');
+    Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
 #========================================category=====================================================
 
 #========================================Product=====================================================
@@ -95,6 +94,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('shipping-update/{id}', 'ShippingController@update');
     Route::post('shipping-delete/{id}', 'ShippingController@delete');
     Route::get('shipping-show', 'ShippingController@show');
+    Route::get('shipping-showid/{id}', 'ShippingController@showid');
 #========================================shipping=====================================================
 
 #========================================Order=====================================================
@@ -104,4 +104,22 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::get('show-orders', 'OrderController@showall_orders');
     Route::get('show-order/{id}', 'OrderController@show_order');
 #========================================Order=====================================================
+
+#========================================plan=====================================================
+    Route::post('choose-plan', 'PlanController@choose');
+#========================================plan=====================================================
+});
+#========================================plan=====================================================
+Route::get('show-plan', 'App\Http\Controllers\Api\ShopOwner\PlanController@show');
+#========================================plan=====================================================
+Route::get('paymob-callback', 'App\Http\Controllers\Api\PaymobController@processedCallback');
+#===========================================mailing=================================================
+//Auth::routes(['verify' => true]);
+//Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+#===========================================mailing=================================================
+Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
+    Route::get('show-cat', 'CategoryController@show');
+    Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
+    Route::get('show-Product', 'ProductsController@showProduct');
+
 });

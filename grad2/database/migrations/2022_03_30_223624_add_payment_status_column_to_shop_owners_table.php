@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlansTable extends Migration
+class AddPaymentStatusColumnToShopOwnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreatePlansTable extends Migration
      */
     public function up()
     {
-        Schema::create('plans', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('duration');
-            $table->integer('cost');
-            $table->timestamps();
+        Schema::table('shop_owners', function (Blueprint $table) {
+            $table->string('payment_status')->comment('paid or pending')->nullable();
         });
     }
 
@@ -29,6 +25,8 @@ class CreatePlansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plans');
+        Schema::table('shop_owners', function (Blueprint $table) {
+            $table->dropColumn('payment_status');
+        });
     }
 }
