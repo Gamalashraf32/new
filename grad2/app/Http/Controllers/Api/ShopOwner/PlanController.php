@@ -20,7 +20,7 @@ class PlanController extends Controller
        return $this->returnData('This is our all plans',$plans->makeHidden(["created_at","updated_at"]),200);
     }
 
-    public function choose(Request $request)
+    public function choose( Request $request)
     {
         $validator = Validator::make($request->all(), [
             'plan_id' => 'required',
@@ -36,11 +36,10 @@ class PlanController extends Controller
         $user=auth('shop_owner')->user();
         $plan = Plan::whereId($request->plan_id)->first();
         $paymob = new PayMobController();
-        ShopOwner::where('id',$user->id)->update(['plan_id' => $request->plan_id, 'payment_status' => 'pending']);
         return $paymob->checkingOut($user->id, $plan->cost);
 
-
     }
+
 
     public function checkout_done() {
         $user=auth('shop_owner')->user();

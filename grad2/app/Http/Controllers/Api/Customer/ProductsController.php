@@ -11,16 +11,32 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     use ResponseTrait;
-    public function showProduct()
+    public function showProduct(Request $request)
     {
-        $shop_id = auth('api')->user()->shop()->first();
-        $cat_id = Category::where('shop_id',$shop_id->id)->first();
-        $product = Product::where('category_id',$cat_id->id)->get();
-        if($product)
+        $shop_id = auth('api')->user()->shop()->value('id');
+        $category=Category::where('shop_id',$shop_id)->where('id',$request->id)->value('id');
+        if(!$category)
         {
-            return $this->returnData('ok',$product,200);
+            return $this->returnError('not found',404);
+        }
+        $Product=Product::where('category_id',$category)->get();
+        if($Product)
+        {
+            return $this->returnData('ok',$Product,200);
         }
         return $this->returnError('Product not found',404);
     }
 
+
+    public function showprouctid($id)
+    {
+        $shop_id = auth('api')->user()->shop()->value('id');
+        $product  = Product::whereHas('category', function ($query) use($shop_id) {
+            $query->where('shop_id',$shop_id);
+        })->find($id);
+        if (!$product) {
+            return $this->returnError(' product not found', 404, true);
+        }
+        return $this->returnData('chosen product info', $product, 200);
+    }
 }

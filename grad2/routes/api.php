@@ -121,5 +121,6 @@ Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controller
     Route::get('show-cat', 'CategoryController@show');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
     Route::get('show-Product', 'ProductsController@showProduct');
+    Route::get('show-Product-id/{id}', 'ProductsController@showprouctid');
 
 });

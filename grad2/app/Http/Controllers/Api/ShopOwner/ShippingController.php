@@ -24,9 +24,9 @@ class ShippingController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
         Shipping::create([
-           'shop_id'=>$shop_id->id,
+           'shop_id'=>$shop_id,
            'government'=>$request->government,
             'price'=>$request->price
         ]);
@@ -45,8 +45,8 @@ class ShippingController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $shop_id = auth('shop_owner')->user()->shop()->first();
-        $shid = Shipping::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $shid = Shipping::where('shop_id', $shop_id)->find($id);
         if (!$shid) {
             return $this->returnError('shipping not found', 404, true);
         }
@@ -59,19 +59,19 @@ class ShippingController extends Controller
     public function delete($id)
     {
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $shipping = Shipping::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $shipping = Shipping::where('shop_id', $shop_id)->find($id);
         if (!$shipping) {
-            return $this->returnError('category not found', 404, true);
+            return $this->returnError('shipping info not found', 404, true);
         }
         $shipping->delete();
         return $this->returnSuccess('shipping info deleted successfully', 200);
     }
     public function show()
     {
-        $shop_id = auth('shop_owner')->user()->shop()->first();
-        $ship= Shipping::where([['shop_id', $shop_id->id]])->get();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $ship= Shipping::where('shop_id', $shop_id)->get();
         if (!$ship) {
             return $this->returnError(' no shipping info yet', 404, true);
         }
@@ -79,8 +79,8 @@ class ShippingController extends Controller
     }
     public function showid($id)
     {
-        $shop_id = auth('shop_owner')->user()->shop()->first();
-        $ship= Shipping::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $ship= Shipping::where('shop_id', $shop_id)->find($id);
         if (!$ship) {
             return $this->returnError(' no shipping like that', 404, true);
         }

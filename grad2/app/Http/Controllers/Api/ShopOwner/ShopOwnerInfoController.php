@@ -45,7 +45,7 @@ class ShopOwnerInfoController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $user=auth('shop_owner')->user()->first();
+        $user=auth('shop_owner')->user();
         $user->first_name = $request->first_name;
             $user->second_name = $request->second_name;
             $user->email = $request->email;

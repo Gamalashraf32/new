@@ -34,10 +34,10 @@ class CategoryController extends Controller
             return $this->returnError(implode(' , ', $errors), 400);
         }
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
         Category::create([
-            'shop_id' => $shop_id->id,
+            'shop_id' => $shop_id,
             'name' => $request->name,
             'description' => $request->description,
         ]);
@@ -63,10 +63,10 @@ class CategoryController extends Controller
             return $this->returnError(implode(' , ', $errors), 400);
         }
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
 
-        $cat = Category::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $cat = Category::where('shop_id', $shop_id)->find($id);
         if (!$cat) {
             return $this->returnError('category not found', 404, true);
         }
@@ -84,9 +84,9 @@ class CategoryController extends Controller
     public function deletecat($id)
     {
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $cat = Category::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $cat = Category::where('shop_id', $shop_id)->find($id);
         if (!$cat) {
             return $this->returnError('category not found', 404, true);
         }
@@ -100,9 +100,9 @@ class CategoryController extends Controller
     public function showcat()
     {
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $cat = Category::where([['shop_id', $shop_id->id]])->get();
+        $cat = Category::where('shop_id', $shop_id)->get();
         if (!$cat) {
             return $this->returnError(' no categories yet', 404, true);
         }
@@ -113,9 +113,9 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function showcatid($id)
     {
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $cat = Category::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $cat = Category::where('shop_id', $shop_id)->find($id);
         if (!$cat) {
             return $this->returnError(' category not found', 404, true);
         }

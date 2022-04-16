@@ -13,9 +13,9 @@ class CategoryController extends Controller
     public function show()
     {
 
-        $shop_id = auth('api')->user()->shop()->first();
+        $shop_id = auth('api')->user()->shop()->value('id');
 
-        $cat = Category::where([['shop_id', $shop_id->id]])->get();
+        $cat = Category::where('shop_id', $shop_id)->get();
         if (!$cat) {
             return $this->returnError(' no categories yet', 404, true);
         }
@@ -26,9 +26,9 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function showcatid($id)
     {
-        $shop_id = auth('api')->user()->shop()->first();
+        $shop_id = auth('api')->user()->shop()->value('id');
 
-        $cat = Category::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $cat = Category::where('shop_id', $shop_id)->find($id);
         if (!$cat) {
             return $this->returnError(' category not found', 404, true);
         }

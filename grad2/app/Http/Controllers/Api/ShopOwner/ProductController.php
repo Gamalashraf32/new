@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Productimage;
+use App\Traits\ImageUpload;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    use ImageUpload,ResponseTrait;
     public function addProduct(Request $request)
     {
 
@@ -51,9 +54,10 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function updateProduct(Request $request,$id)
     {
-        $shop_id = auth('shop_owner')->user()->shop()->first();
-        $cat_id = Category::where('shop_id',$shop_id->id)->first();
-        $product = Product::where('category_id',$cat_id->id)->first()->find($id);
+        $user_id=auth('shop_owner')->user();
+        $product=Product::whereHas('shop', function ($query) use($user_id) {
+            $query->where('shop_owner_id',$user_id->id) ;
+        })->find($id);
 
         if(!$product)
         {

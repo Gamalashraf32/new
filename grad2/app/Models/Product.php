@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use \Znck\Eloquent\Traits\BelongsToThrough;
     use HasFactory;
 
     protected $fillable = [
@@ -33,5 +34,11 @@ class Product extends Model
     public function cart_product()
     {
         return $this->belongsTo(CartProducts::class);
+    }
+
+
+    public function shop()
+    {
+        return $this->belongsToThrough(Shop::class, Category::class);
     }
 }
