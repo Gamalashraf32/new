@@ -15,6 +15,7 @@ class ShippingController extends Controller
         $validator = Validator::make($request->all(), [
             'government' => 'required',
             'price' => 'required',
+            'duration'=>'required'
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -28,7 +29,8 @@ class ShippingController extends Controller
         Shipping::create([
            'shop_id'=>$shop_id,
            'government'=>$request->government,
-            'price'=>$request->price
+            'price'=>$request->price,
+            'duration'=>$request->duration
         ]);
         return $this->returnSuccess('shipping info saved successfully', 200);
     }
@@ -36,6 +38,7 @@ class ShippingController extends Controller
         $validator = Validator::make($request->all(), [
             'government' => 'required',
             'price' => 'required',
+            'duration'=>'required'
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -53,6 +56,7 @@ class ShippingController extends Controller
         $shid->update([
             'government' => $request->government,
             'price' => $request->price,
+            'duration'=>$request->duration
         ]);
         return $this->returnSuccess('shipping info updated successfully', 200);
     }

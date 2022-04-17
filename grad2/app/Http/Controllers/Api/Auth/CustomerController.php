@@ -47,8 +47,9 @@ class CustomerController extends Controller
             'first_name' => 'required|string|min:3|max:255',
             'second_name' => 'required|string|min:3|max:255',
             'email' =>  'required|email|unique:users',
-            'password' => 'required|confirmed',
+            'password' => 'required|confirmed|min:8',
             'phone_number' => 'required|unique:users|min:11',
+            'address'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -69,7 +70,6 @@ class CustomerController extends Controller
             'password' => Hash::make($request['password']),
             'phone_number' => $request->phone_number,
             'address' => $request->address,
-            'shop_id' => $request->shop_id,
         ]);
 
         $token = auth('api')->attempt(['email' => $request['email'], 'password' => $request['password']]);

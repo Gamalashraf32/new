@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     use  ResponseTrait;
-    public function show()
+    public function showcat()
     {
 
         $shop_id = auth('api')->user()->shop()->value('id');

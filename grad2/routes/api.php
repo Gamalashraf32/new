@@ -107,20 +107,24 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 
 #========================================plan=====================================================
     Route::post('choose-plan', 'PlanController@choose');
-#========================================plan=====================================================
+#========================================Search=====================================================
+    Route::get('product-search/{name}', 'SearchController@productsearch');
+    Route::get('customer-search/{name}', 'SearchController@searchcustomer');
+    Route::get('shipping-search/{name}', 'SearchController@searchshipping');
 });
-#========================================plan=====================================================
+#=========================================================================================================
 Route::get('show-plan', 'App\Http\Controllers\Api\ShopOwner\PlanController@show');
-#========================================plan=====================================================
 Route::get('paymob-callback', 'App\Http\Controllers\Api\PaymobController@processedCallback');
 #===========================================mailing=================================================
 //Auth::routes(['verify' => true]);
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-#===========================================mailing=================================================
+
 Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
-    Route::get('show-cat', 'CategoryController@show');
+    Route::get('show-cat', 'CategoryController@showcat');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
-    Route::get('show-Product', 'ProductsController@showProduct');
+    Route::get('show-cat-Products', 'ProductsController@showCatProducts');
     Route::get('show-Product-id/{id}', 'ProductsController@showprouctid');
+    Route::get('show-all-products', 'ProductsController@showallProducts');
+    Route::get('search-product/{name}', 'ProductsController@searchproduct');
 
 });

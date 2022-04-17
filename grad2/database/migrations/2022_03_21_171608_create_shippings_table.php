@@ -20,6 +20,7 @@ class CreateShippingsTable extends Migration
                 ->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('government');
             $table->integer('price');
+            $table->string('duration');
             $table->timestamps();
 
         });
