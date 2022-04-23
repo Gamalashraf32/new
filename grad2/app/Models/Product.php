@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Znck\Eloquent\Traits\BelongsToThrough;
 
 class Product extends Model
 {
     use \Znck\Eloquent\Traits\BelongsToThrough;
     use HasFactory;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $fillable = [
         'category_id', 'name', 'description', 'price', 'brand',
@@ -35,7 +37,6 @@ class Product extends Model
     {
         return $this->belongsTo(CartProducts::class);
     }
-
 
     public function shop()
     {

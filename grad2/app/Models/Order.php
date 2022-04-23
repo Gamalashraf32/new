@@ -12,4 +12,8 @@ class Order extends Model
         'shop_id', 'shop_user_id', 'status', 'note',
         'subtotal_price', 'discounts','shipping_price', 'total_price'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

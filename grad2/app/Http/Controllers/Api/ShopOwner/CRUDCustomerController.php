@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\gamal;
 use App\Http\Resources\ShowCustomerByID;
+use Illuminate\Validation\Rule;
 
 class CRUDCustomerController extends Controller
 {
@@ -21,13 +22,18 @@ class CRUDCustomerController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'second_name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'phone_number' => 'required',
-            'address' => 'required',
-
+            'first_name' => 'required|string|min:3|max:255',
+            'second_name' => 'required|string|min:3|max:255',
+            'email' => [
+                'required',
+                Rule::unique('users','email')->ignore(auth('api')->user()->id),
+            ],
+            'password' => 'required|confirmed',
+            'phone_number' => [
+                'required',
+                Rule::unique('users','phone_number')->ignore(auth('api')->user()->id),
+            ],
+            'address' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -63,9 +69,9 @@ class CRUDCustomerController extends Controller
     public function showcustomer()
     {
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $customers = User::where([['shop_id', $shop_id->id]])->get();
+        $customers = User::where([['shop_id', $shop_id]])->get();
 
         if ($customers) {
             return $this->returnData('ok', new gamal($customers), 400);
@@ -75,9 +81,9 @@ class CRUDCustomerController extends Controller
 
     public function showcustomerwithid($id)
     {
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $customers = User::where([['shop_id', $shop_id->id]])->find($id);
+        $customers = User::where('shop_id', $shop_id)->find($id);
 
         if ($customers) {
             return $this->returnData('ok', new ShowCustomerByID($customers), 400);
@@ -88,9 +94,9 @@ class CRUDCustomerController extends Controller
     public function update(Request $request, $id)
     {
 
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $customer = User::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $customer = User::where('shop_id', $shop_id)->find($id);
 
         if (!$customer) {
             return $this->returnError('Customer dose not exists', 404);
@@ -105,9 +111,9 @@ class CRUDCustomerController extends Controller
 
     public function delete($id)
     {
-        $shop_id = auth('shop_owner')->user()->shop()->first();
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
 
-        $customer = User::where([['shop_id', $shop_id->id]])->first()->find($id);
+        $customer = User::where('shop_id', $shop_id)->find($id);
 
         if (!$customer) {
             return $this->returnError('Customer dose not exists', 404);

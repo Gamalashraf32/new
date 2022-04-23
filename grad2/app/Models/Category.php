@@ -22,5 +22,13 @@ class Category extends Model
     {
         return $this->belongsTo(Shop::class);
     }
+    public function option()
+    {
+        return $this->hasManyThrough(Option::class,Product::class);
+    }
+    public function variant ()
+    {
+        return $this->hasManyThrough(ProductVariant::class,Product::class);
+    }
 
 }

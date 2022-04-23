@@ -51,4 +51,6 @@ class ShopOwner extends Authenticatable implements  JWTSubject//MustVerifyEmail
     }
 
 
+
+
 }

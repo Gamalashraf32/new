@@ -49,9 +49,10 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 
 #========================================Product=====================================================
     Route::post('add-product', 'ProductController@addProduct');
-    Route::post('update-Product/{id}', 'ProductController@updateProduct');
-    Route::post('delete-Product/{id}', 'ProductController@deleteProduct');
-    Route::get('show-Product', 'ProductController@showProduct');
+    Route::post('update-product/{id}', 'ProductController@updateProduct');
+    Route::post('delete-product/{id}', 'ProductController@deleteProduct');
+    Route::get('show-product', 'ProductController@showProduct');
+    Route::get('show-product/{id}', 'ProductController@showProductwithid');
 #========================================Product=====================================================
 
 #========================================option=====================================================
@@ -59,13 +60,14 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-option/{id}', 'OptionController@updateoption');
     Route::post('delete-option/{id}', 'OptionController@deleteoption');
     Route::get('show-option', 'OptionController@showoption');
+    Route::get('show-option/{id}', 'OptionController@showoptionwithid');
 #========================================option=====================================================
 
 #========================================Variant=====================================================
     Route::post('add-variant', 'VariantController@addvariant');
     Route::post('update-variant/{id}', 'VariantController@updatevariant');
     Route::post('delete-variant/{id}', 'VariantController@deletevariant');
-    Route::get('show-variant', 'VariantController@showvariant');
+    Route::get('show-variant/{id}', 'VariantController@showvariantwithid');
 #========================================Variant=====================================================
 
 #========================================Discount==================================================
@@ -87,6 +89,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');
     Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
     Route::get('show-customer', 'CRUDCustomerController@showcustomer');
+    Route::get('choose-plan', 'PlanController@choose');
 #========================================CRUDCustomer=====================================================
 
 #========================================shipping=====================================================
@@ -120,6 +123,7 @@ Route::get('paymob-callback', 'App\Http\Controllers\Api\PaymobController@process
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
 
 Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
+    
     Route::get('show-cat', 'CategoryController@showcat');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
     Route::get('show-cat-Products', 'ProductsController@showCatProducts');
@@ -127,4 +131,16 @@ Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controller
     Route::get('show-all-products', 'ProductsController@showallProducts');
     Route::get('search-product/{name}', 'ProductsController@searchproduct');
 
+
+    Route::post('editinfo', 'ProfileController@editinfo');
+    Route::get('all-orders', 'ProfileController@showallorders');
+    Route::get('order/{id}', 'ProfileController@showoneorder');
+
+
 });
+#========================================Customer=====================================================
+
+//Auth::routes(['verify' => true]);
+//Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+#===========================================mailing=================================================
+

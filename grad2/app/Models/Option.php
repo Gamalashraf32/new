@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Option extends Model
 {
+    use \Znck\Eloquent\Traits\BelongsToThrough;
     protected $fillable = [
          'name','product_id'
     ];
@@ -18,7 +19,10 @@ class Option extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
-
+    public function cat()
+    {
+        return $this->belongsToThrough(Category::class,Product::class);
+    }
 
     use HasFactory;
 }
