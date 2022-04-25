@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Shop;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     use  ResponseTrait;
-    public function showcat()
+    public function showcat(Request $request)
     {
 
-        $shop_id = auth('api')->user()->shop()->value('id');
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
 
         $cat = Category::where('shop_id', $shop_id)->get();
         if (!$cat) {

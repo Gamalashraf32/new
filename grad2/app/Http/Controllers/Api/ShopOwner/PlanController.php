@@ -44,8 +44,15 @@ class PlanController extends Controller
 
 
     public function checkout_done($id) {
-        ShopOwner::where('id',$id)->update(['payment_status' => 'paid']); //,'expires_at' => Carbon::now()->addMonth(), 'is_active' => 1]);
+        $shop_owner = ShopOwner::where('id',$id)->first();
+        $shop_owner->update(['payment_status' => 'paid']);//,'expires_at' => Carbon::now()->addMonth(), 'is_active' => 1]);
+            $shop_owner->starts_at = Carbon::today()->toDateString();
+            $exp_data = Carbon::today()->addMonth();
+            $exp_data->toDateString();
+            $shop_owner->expires_at = $exp_data;
+            $shop_owner->is_active = 1;
         Tempid::first()->delete();
+
         return $this->returnSuccess('payment succeeded', 200);
     }
 }

@@ -23,6 +23,7 @@ class ShopOwner extends Authenticatable implements  JWTSubject//MustVerifyEmail
         'government',
         'city',
     ];
+    protected $dates = ['expires_at','starts_at'];
     use HasFactory;
 
     public function getJWTIdentifier()

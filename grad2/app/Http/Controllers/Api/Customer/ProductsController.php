@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\ShopOwner;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -12,9 +13,9 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     use ResponseTrait;
-    public function showallProducts()
+    public function showallProducts(Request $request)
     {
-        $shop_id = auth('api')->user()->shop()->value('id');
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $product  = Product::whereHas('category', function ($query) use($shop_id) {
             $query->where('shop_id',$shop_id);
         })->get();
@@ -26,7 +27,7 @@ class ProductsController extends Controller
 
     public function showCatProducts(Request $request)
     {
-        $shop_id = auth('api')->user()->shop()->value('id');
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $category=Category::where('shop_id',$shop_id)->where('id',$request->category_id)->value('id');
         if(!$category)
         {
@@ -41,9 +42,9 @@ class ProductsController extends Controller
     }
 
 
-    public function showprouctid($id)
+    public function showprouctid(Request $request,$id)
     {
-        $shop_id = auth('api')->user()->shop()->value('id');
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $product  = Product::whereHas('category', function ($query) use($shop_id) {
             $query->where('shop_id',$shop_id);
         })->find($id);
@@ -53,9 +54,9 @@ class ProductsController extends Controller
         return $this->returnData('chosen product info', $product, 200);
     }
 
-    public function searchproduct($name)
+    public function searchproduct(Request $request,$name)
     {
-        $shop_id = auth('api')->user()->shop()->value('id');
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $product  = Product::where('name', 'LIKE', '%'. $name. '%')->whereHas('category', function ($query) use($shop_id) {
             $query->where('shop_id',$shop_id);
         })->get();

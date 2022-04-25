@@ -57,10 +57,11 @@ class ProfileController extends Controller
         return $this->returnError('Customer not saved', 400);
     }
 
-    public function showallorders()
+    public function showallorders(Request $request)
     {
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $user = auth('api')->user();
-        $orders = Order::where('shop_user_id', $user->id)->get();
+        $orders = Order::where('shop_id',$shop_id)->where('shop_user_id', $user->id)->get();
         if(isEmpty($orders))
         {
             return $this->returnData('Here are the orders',$orders,200);
@@ -70,10 +71,11 @@ class ProfileController extends Controller
     }
 
 
-    public function showoneorder($id)
+    public function showoneorder(Request $request,$id)
     {
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $user = auth('api')->user();
-        $orders = Order::where('shop_user_id', $user->id)->find($id);
+        $orders = Order::where('shop_id',$shop_id)->where('shop_user_id', $user->id)->find($id);
         if(isEmpty($orders))
         {
             return $this->returnData('Here are the orders',$orders,200);

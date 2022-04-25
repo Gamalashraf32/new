@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductVariant extends Model
 {
     use HasFactory;
-    use \Znck\Eloquent\Traits\BelongsToThrough;
+    //use \Znck\Eloquent\Traits\BelongsToThrough;
     protected $guarded=[];
     public function product()
     {
@@ -18,8 +18,8 @@ class ProductVariant extends Model
     {
         return $this->belongsTo(Option::class);
     }
-    public function cate ()
+    /*public function cate ()
     {
         return $this->belongsToThrough(Category::class,Product::class);
-    }
+    }*/
 }

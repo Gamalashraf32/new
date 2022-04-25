@@ -157,7 +157,6 @@ class ProductController extends Controller
         $product=Product::whereHas('shop', function ($query) use($user) {
             $query->where('shop_owner_id',$user->id);
         })->get();
-
         if(!isEmpty($product))
         {
             return $this->returnData('ok',$product,200);
@@ -167,14 +166,23 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function showProductwithid($id)
     {
-        $user=auth('shop_owner')->user();
-        $product=Product::whereHas('shop', function ($query) use($user) {
+        $shop_id=auth('shop_owner')->user()->shop()->first()->value('id');
+        /*$product=Product::whereHas('shop', function ($query) use($user) {
             $query->where('shop_owner_id',$user->id);
-        })->find($id);
-
+        })->get();*/
+        $product=Product::where('id',$id)->first();
+        $options=Option::where('product_id',$product->id)->get();
+        $vatiants=ProductVariant::where('product_id',$product->id)->get();
+        $images=Productimage::where('product_id',$product->id)->get();
+        $data=[
+            'product'=>$product,
+            'options'=>$options,
+            'variants'=>$vatiants,
+            'image'=>$images
+        ];
         if($product)
         {
-            return $this->returnData('ok',$product,200);
+            return $this->returnData('ok',$data,200);
         }
         return $this->returnError('Product not found',404);
     }
