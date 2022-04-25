@@ -15,6 +15,7 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->unsignedBigInteger('shop_owner_id')->nullable();
             $table->foreign('shop_owner_id')->on('shop_owners')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();

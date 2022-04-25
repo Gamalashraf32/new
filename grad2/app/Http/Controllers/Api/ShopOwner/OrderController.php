@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\ShopOwner;
 
+use App\Http\Controllers\Api\ShopOwner\DiscountCodeController;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Shipping;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
@@ -18,50 +20,96 @@ class OrderController extends Controller
     use ResponseTrait;
     public function add_order(Request $request)
     {
+        if(is_null($request->shop_id))
+        {
+            $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        }
+        else
+        {
+            $shop_id = $request->shop_id;
+        }
         foreach ($request['products'] as $product_order)
         {
-            $product_id=Product::where('name',$product_order['product_name'])->value('id');
-            $product_variant=ProductVariant::where('product_id',$product_id)
-                ->where('value',$product_order['variant_value'])->first();
+            $product_id  = Product::where('name',$product_order['product_name'])->
+            whereHas('category', function ($query) use($shop_id) {
+                $query->where('shop_id',$shop_id);
+            })->value('id');
+            //$product_id=Product::where('name',$product_order['product_name'])->value('id');
+
             $cat_id=Product::where('id',$product_id)->value('category_id');
-            $shop_id=Category::where('id',$cat_id)->value('shop_id');
-            if($shop_id!=auth('shop_owner')->user()->shop()->first()->id)
+            if($shop_id!=Category::where('id',$cat_id)->value('shop_id'))
             {
                 return $this->returnError($product_order['product_name']." not found",400);
             }
-            if(!$product_variant||$product_variant->quantity<$product_order['quantity'])
+            if($this->check_quantity($product_order['variant1'], $product_order['variant2'], $product_id, $product_order['quantity']))
             {
                 return $this->returnError($product_order['product_name']." not found in stock",400);
             }
         }
         try {
             DB::transaction(function () use ($request) {
-                $user_id = User::where('email', $request->email)->value('id');
+                if(is_null($request->shop_id))
+                {
+                    $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+                }
+                else
+                {
+                    $shop_id = $request->shop_id;
+                }
+                $user_id = User::where('shop_id',$shop_id)->where('email', $request->email)->value('id');
                 $order = Order::create([
-                    'shop_id' => auth('shop_owner')->user()->shop()->first()->id,
                     'shop_user_id' => $user_id,
                     'note' => $request->note,
-                    'discounts' => $request->discounts,
-                    'shipping_price' => $request->shipping_price
                 ]);
+                if(is_null($request->shop_id))
+                {
+                    $order->shop_id = $shop_id;
+                }
+                else
+                {
+                    $order->shop_id = $request->shop_id;
+                }
                 foreach ($request['products'] as $product_order) {
                     $product_id = Product::where('name', $product_order['product_name'])->value('id');
-                    $product_variant = ProductVariant::where('product_id', $product_id)
-                        ->where('value', $product_order['variant_value'])->first();
+                    $product_variant1 = ProductVariant::where('product_id', $product_id)
+                        ->where('value', $product_order['variant1'])->first();
+                    $product_variant2=ProductVariant::where('product_id',$product_id)
+                        ->where('value',$product_order['variant2'])->first();
                     $order_product = OrderProduct::create([
-                        'shop_id' => auth('shop_owner')->user()->shop()->first()->id,
+                        'shop_id' => $shop_id,
                         'order_id' => $order->id,
                         'product_id' => $product_id,
-                        'variant_id' => $product_variant->id,
+                        'variant_id1' => $product_variant1->id,
                         'name' => $product_order['product_name'],
                         'quantity' => $product_order['quantity'],
                         'price' => Product::where('id', $product_id)->value('price')
                     ]);
-                    ProductVariant::find($product_variant->id)->decrement('quantity', $product_order['quantity']);
+                    ProductVariant::find($product_variant1->id)->decrement('quantity', $product_order['quantity']);
+                    if($product_variant2)
+                    {
+                        $order_product->variant_id2 = $product_variant2->id;
+                        ProductVariant::find($product_variant2->id)->decrement('quantity', $product_order['quantity']);
+
+                    }
                     $order->increment('subtotal_price', $order_product->quantity * $order_product->price);
                 }
-                $order->increment('total_price', ($order->subtotal_price + $order->shipping_price) - $order->discounts);
-                //return $this->returnSuccess("Order Placed",200);
+                $user = User::where('email', $request->email)->value('city');
+                $ship_price= Shipping::where('shop_id',$shop_id)->where('government',$user)->value('price');
+                if(!is_null($request->discounts))
+                {
+                    $dis =(new DiscountCodeController)->calculate_discount($request->discounts,$order->subtotal_price);
+                    if(is_int($dis))
+                    {
+                        $order->increment('discounts', $dis);
+                    }
+                    else
+                    {
+                         throw new \ErrorException($dis);
+                    }
+                }
+                $order->increment('shipping_price', $ship_price);
+                $order->increment('total_price', ($order->subtotal_price + $ship_price) - $order->discounts);
+
             });
         }catch (\Exception $exception)
         {
@@ -117,18 +165,29 @@ class OrderController extends Controller
                 if ($request->status == 'cancelled') {
                     $products = OrderProduct::where('order_id', $id)->get();
                     foreach ($products as $product) {
-                        $product_var = ProductVariant::where('id', $product->variant_id)->first();
-                        if ($product_var) {
-                            $product_var->increment('quantity', $product->quantity);
+                        $product_var1 = ProductVariant::where('id', $product->variant_id1)->first();
+                        $product_var2 = ProductVariant::where('id', $product->variant_id1)->first();
+                        if ($product_var1) {
+                            $product_var1->increment('quantity', $product->quantity);
+                        }
+                        if ($product_var2) {
+                            $product_var2->increment('quantity', $product->quantity);
                         }
                     }
                     $order->status = $request->status;
                     $order->save();
                     return $this->returnSuccess("Order cancelled", 200);
                 } else {
-                    $order->status = $request->status;
-                    $order->save();
-                    return $this->returnSuccess("Status updated", 200);
+                    if ($order->status != 'cancelled') {
+
+                        $order->status = $request->status;
+                        $order->save();
+                        return $this->returnSuccess("Status updated", 200);
+                    }
+                    else
+                    {
+                        return $this->returnError("You can't updated it", 401);
+                    }
                 }
             } else {
                 return $this->returnError("You are not authorized", 401);
@@ -167,6 +226,32 @@ class OrderController extends Controller
         }
         else{
             return $this->returnError("Order Not Found", 400);
+        }
+    }
+    public function check_quantity($variant1,$variant2,$product_id,$quantity)
+    {
+        $product_variant1=ProductVariant::where('product_id',$product_id)
+            ->where('value',$variant1)->first();
+        if(!$product_variant1||$product_variant1->quantity<$quantity)
+        {
+            return true;
+        }
+        if(is_null($variant2))
+        {
+            return false;
+        }
+        else
+        {
+            $product_variant2=ProductVariant::where('product_id',$product_id)
+                ->where('value',$variant2)->first();
+            if(!$product_variant2||$product_variant2->quantity<$quantity)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Option;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\Productimage;
 use App\Models\ProductVariant;
-use App\Models\Shop;
 use App\Traits\ImageUpload;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -39,13 +39,11 @@ class ProductController extends Controller
                 $errors[] = $error;
             }
             return $this->returnError(implode(' , ', $errors), 400);
-
-        }if(!auth('shop_owner')->user())
-         {
-             return $this->returnError('you are not authorized to edit this data', 401, false);
-         }
-
+        }
+        $user=auth('shop_owner')->user();
+        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
         $product = Product::create([
+            'shop_id' => $shop_id,
             'category_id' => $request->category_id,
             'name' => $request->name,
             'description' => $request->description,

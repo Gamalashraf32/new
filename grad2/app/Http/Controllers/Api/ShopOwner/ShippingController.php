@@ -7,13 +7,15 @@ use App\Models\Shipping;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ShippingController extends Controller
 {
     use  ResponseTrait;
     public function add(Request $request){
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'government' => 'required',
+            'government' => [Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)],
             'price' => 'required',
             'duration'=>'required'
         ]);
@@ -35,8 +37,9 @@ class ShippingController extends Controller
         return $this->returnSuccess('shipping info saved successfully', 200);
     }
     public function update(Request $request,$id){
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'government' => 'required',
+            'government' => [Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)->ignore($id)],
             'price' => 'required',
             'duration'=>'required'
         ]);
@@ -48,7 +51,6 @@ class ShippingController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $shop_id = auth('shop_owner')->user()->shop()->value('id');
         $shid = Shipping::where('shop_id', $shop_id)->find($id);
         if (!$shid) {
             return $this->returnError('shipping not found', 404, true);

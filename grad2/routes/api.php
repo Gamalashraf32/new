@@ -134,6 +134,11 @@ Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controller
     Route::get('show-Product-id/{id}', 'ProductsController@showprouctid');
     Route::get('show-all-products', 'ProductsController@showallProducts');
     Route::get('search-product/{name}', 'ProductsController@searchproduct');
+    Route::post('add_product', 'CartController@add_product');
+    Route::post('update_product/{id}', 'CartController@update_product');
+    Route::post('delete_product/{id}', 'CartController@delete_product');
+    Route::post('show', 'CartController@show');
+    Route::post('place_order', 'CartController@place_order');
 
 
     Route::post('editinfo', 'ProfileController@editinfo');

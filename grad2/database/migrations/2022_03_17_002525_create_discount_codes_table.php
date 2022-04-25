@@ -18,7 +18,7 @@ class CreateDiscountCodesTable extends Migration
             $table->unsignedBigInteger('shop_id')->nullable();
             $table->foreign('shop_id')->on('shops')->references('id')
             ->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('code')->unique();
+            $table->string('code');
             $table->string('type');
             $table->integer('value');
             $table->integer('minimum_requirements_value')->default('0');

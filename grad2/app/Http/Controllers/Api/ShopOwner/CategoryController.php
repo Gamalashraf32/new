@@ -14,6 +14,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -21,8 +22,9 @@ class CategoryController extends Controller
 
     public function addCategory(Request $request)
     {
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => [Rule::unique('categories', 'name')->where('shop_id' , $shop_id)],
             'description' => 'required',
         ]);
         if ($validator->fails()) {
@@ -50,9 +52,9 @@ class CategoryController extends Controller
 #==========================================================================================================================
     public function updateCategory(Request $request, $id)
     {
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
+            'name' => [Rule::unique('categories', 'name')->where('shop_id' , $shop_id)->ignore($id)]
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -62,9 +64,6 @@ class CategoryController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-
-        $shop_id = auth('shop_owner')->user()->shop()->value('id');
-
 
         $cat = Category::where('shop_id', $shop_id)->find($id);
         if (!$cat) {

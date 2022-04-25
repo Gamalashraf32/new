@@ -28,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'phone_number',
         'address',
         'shop_id',
+        'city'
     ];
 
     /**
@@ -59,7 +60,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function Shop(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function shop(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Shop::class);
     }

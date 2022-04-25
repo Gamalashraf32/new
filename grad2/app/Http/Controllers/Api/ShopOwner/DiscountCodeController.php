@@ -8,14 +8,16 @@ use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class DiscountCodeController extends Controller
 {
     use ResponseTrait;
     public function adddiscountcode(Request $request)
     {
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validate = Validator::make($request->all(),[
-            'code'=>'required|unique:discount_codes,code',
+            'code' => [Rule::unique('discount_codes', 'code')->where('shop_id' , $shop_id)],
             'type'=>'required',
             'value'=>'required',
             'minimum_requirements_value'=>'required',
@@ -82,7 +84,7 @@ class DiscountCodeController extends Controller
         $shop_id_dis=DiscountCode::where('id',$id)->value('shop_id');
         if($shop_id==$shop_id_dis) {
             $validate = Validator::make($request->all(), [
-                'code' => [Rule::unique('discount_codes', 'code')->ignore($id)]
+                'code' => [Rule::unique('discount_codes', 'code')->where('shop_id' , $shop_id)->ignore($id)]
             ]);
             if ($validate->fails()) {
                 $errors = [];
@@ -120,6 +122,34 @@ class DiscountCodeController extends Controller
         else
         {
             return $this->returnError("You are not authorized", 401);
+        }
+    }
+
+    public function calculate_discount($code,$total)
+    {
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        $dis_code=DiscountCode::where('shop_id',$shop_id)->where('code',$code)->first();
+        if ($dis_code) {
+            $mytime = Carbon::today()->toDateString();
+            if($dis_code->ends_at->gte($mytime)&&$dis_code->starts_at->lte($mytime))
+            {
+                if($dis_code->type=='fixed')
+                {
+                    return $dis_code->value;
+                }
+                else
+                {
+                    return ($dis_code->value/100)*$total;
+                }
+            }
+            else
+            {
+                return "Code is expired";
+            }
+        }
+        else
+        {
+            return "Code not exist";
         }
     }
 }

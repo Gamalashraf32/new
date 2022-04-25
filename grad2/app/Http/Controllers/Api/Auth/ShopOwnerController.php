@@ -86,6 +86,7 @@ class ShopOwnerController extends Controller
         ]);
 
         Shop::create([
+            'name' => $request->site_name,
             'shop_owner_id' => $shop_owner->id,
         ]);
 
