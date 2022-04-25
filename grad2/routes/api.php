@@ -121,12 +121,16 @@ Route::get('paymob-callback', 'App\Http\Controllers\Api\PaymobController@process
 #===========================================mailing=================================================
 //Auth::routes(['verify' => true]);
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+Route::Post('send-email', 'App\Http\Controllers\Api\ShopOwner\ForgotPasswordController@invoke');
+Route::post('reset-password', 'App\Http\Controllers\Api\ShopOwner\ForgotPasswordController@reset');
 
+#============================================================================================================
 Route::group(['middleware'=>'auth.guard:api','namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
     
     Route::get('show-cat', 'CategoryController@showcat');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
     Route::get('show-cat-Products', 'ProductsController@showCatProducts');
+    Route::get('shop_owner', 'ProductsController@get');
     Route::get('show-Product-id/{id}', 'ProductsController@showprouctid');
     Route::get('show-all-products', 'ProductsController@showallProducts');
     Route::get('search-product/{name}', 'ProductsController@searchproduct');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\ShopOwner\PlanController;
 use App\Models\CombinedOrder;
 use App\Models\ShopOwner;
+use App\Models\Tempid;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\RedirectResponse;
@@ -40,8 +41,19 @@ class PayMobController extends Controller
             "auth_token"=>$json['token'],
             "delivery_needed"=>"false",
             "amount_cents"=>$price*100,
-            "merchant_order_id" => rand(10, 100000)
+            "merchant_order_id" =>rand(10,100)
+
         ]);
+
+
+
+        $code=Tempid::first();
+        if (is_null($code)) {
+            Tempid::create([
+                'code' => $order->id
+            ]);
+        }
+
 
         $json_final=$response_final->json();
         $response_final_final=Http::withHeaders([
@@ -64,7 +76,7 @@ class PayMobController extends Controller
                 "city"=> $order->city,
                 "country"=> $order->country,
                 "last_name"=> $order->second_name,
-                "state"=> $order->government
+                "state"=> $order->government,
             ],
             "currency"=>"EGP",
             "integration_id"=>env('PAYMOB_INTEGRATION_ID')
@@ -84,8 +96,8 @@ class PayMobController extends Controller
     protected function succeeded(): \Illuminate\Http\JsonResponse
     {
         // Updating order payment status
-        $checkout = new PlanController();
-        return $checkout->checkout_done();
+        //$checkout = new PlanController();
+        //return $checkout->checkout_done();
     }
 
 
@@ -96,7 +108,9 @@ class PayMobController extends Controller
      */
     protected function failed(): \Illuminate\Http\JsonResponse
     {
-        return $this->returnError('payment failed', 401);
+        $id=Tempid::first()->value('code');
+        $checkout = new PlanController();
+        return $checkout->checkout_done($id);
     }
 
     /**
@@ -141,7 +155,7 @@ class PayMobController extends Controller
             return $this->voided();
         } elseif ($isSuccess && $isRefunded) { // transaction refunded.
             return $this->refunded();
-        } elseif (!$isSuccess) { // transaction failed.
+        } elseif (!$isSuccess)  { // transaction failed.
             return $this->failed();
         }
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PayMobController;
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
 use App\Models\ShopOwner;
+use App\Models\Tempid;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -35,15 +36,16 @@ class PlanController extends Controller
         }
         $user=auth('shop_owner')->user();
         $plan = Plan::whereId($request->plan_id)->first();
+        ShopOwner::where('id',$user->id)->update(['plan_id' => $plan->id,'payment_status'=>'pending']);
         $paymob = new PayMobController();
         return $paymob->checkingOut($user->id, $plan->cost);
 
     }
 
 
-    public function checkout_done() {
-        $user=auth('shop_owner')->user();
-        ShopOwner::where('id',$user->id)->update(['payment_status' => 'paid']); //,'expires_at' => Carbon::now()->addMonth(), 'is_active' => true]);
+    public function checkout_done($id) {
+        ShopOwner::where('id',$id)->update(['payment_status' => 'paid']); //,'expires_at' => Carbon::now()->addMonth(), 'is_active' => 1]);
+        Tempid::first()->delete();
         return $this->returnSuccess('payment succeeded', 200);
     }
 }

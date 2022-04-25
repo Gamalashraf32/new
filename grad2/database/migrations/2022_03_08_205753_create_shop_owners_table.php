@@ -24,7 +24,8 @@ class CreateShopOwnersTable extends Migration
             $table->string('country');
             $table->string('government');
             $table->string('city');
-            $table->boolean('is_active')->default(1);
+            $table->boolean('is_active')->default(0);
+            $table->dateTime('expires_at')->nullable();
             $table->unsignedBigInteger('plan_id')->nullable();
             $table->foreign('plan_id')->on('plans')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();
