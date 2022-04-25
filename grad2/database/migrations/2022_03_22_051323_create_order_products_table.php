@@ -22,8 +22,8 @@ class CreateOrderProductsTable extends Migration
             $table->foreign('order_id')->on('orders')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('variant_id1');
-            $table->unsignedBigInteger('variant_id2')->nullable();
+            $table->unsignedBigInteger('variant1');
+            $table->unsignedBigInteger('variant2')->nullable();
             $table->string('name');
             $table->integer('quantity')->default(0);
             $table->double('price', 8, 2)->default(0);

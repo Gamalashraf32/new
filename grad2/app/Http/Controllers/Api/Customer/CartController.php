@@ -43,7 +43,6 @@ class CartController extends Controller
         }
 
         $product=Product::where('shop_id',$shop_id)->where('name',$request->name)->first();
-        $variant_id1=ProductVariant::where('product_id',$product->id)->where('value',$request->variant1)->first()->value('id');
         $variant_id2=ProductVariant::where('product_id',$product->id)->where('value',$request->variant2)->first();
         $cartproduct=CartProducts::create([
             'shop_id'=> $shop_id,
@@ -52,12 +51,12 @@ class CartController extends Controller
             'product_id'=> $product->id,
             'product_name'=> $request->name,
             'quantity' => $request->quantity,
-            'variant_id1' => $variant_id1,
+            'variant1' => $request->variant1,
             'price' => $product->price
         ]);
         if(!is_null($variant_id2))
         {
-            $cartproduct->variant_id2 = $variant_id2->id;
+            $cartproduct->variant2 = $request->variant1;
         }
         $cart->increment('subtotal_price', $cartproduct->quantity * $cartproduct->price);
         return $this->returnSuccess("Product Added",200);

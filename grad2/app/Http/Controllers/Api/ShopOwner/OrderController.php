@@ -79,7 +79,7 @@ class OrderController extends Controller
                         'shop_id' => $shop_id,
                         'order_id' => $order->id,
                         'product_id' => $product_id,
-                        'variant_id1' => $product_variant1->id,
+                        'variant1' => $product_variant1->value,
                         'name' => $product_order['product_name'],
                         'quantity' => $product_order['quantity'],
                         'price' => Product::where('id', $product_id)->value('price')
@@ -87,7 +87,7 @@ class OrderController extends Controller
                     ProductVariant::find($product_variant1->id)->decrement('quantity', $product_order['quantity']);
                     if($product_variant2)
                     {
-                        $order_product->variant_id2 = $product_variant2->id;
+                        $order_product->variant2 = $product_variant2->value;
                         ProductVariant::find($product_variant2->id)->decrement('quantity', $product_order['quantity']);
 
                     }
@@ -165,8 +165,10 @@ class OrderController extends Controller
                 if ($request->status == 'cancelled') {
                     $products = OrderProduct::where('order_id', $id)->get();
                     foreach ($products as $product) {
-                        $product_var1 = ProductVariant::where('id', $product->variant_id1)->first();
-                        $product_var2 = ProductVariant::where('id', $product->variant_id1)->first();
+                        $product_var1 = ProductVariant::where('product_id', $product->product_id)
+                            ->where('value', $product->variant1)->first();
+                        $product_var2 = ProductVariant::where('product_id', $product->product_id)
+                            ->where('value', $product->variant2)->first();
                         if ($product_var1) {
                             $product_var1->increment('quantity', $product->quantity);
                         }

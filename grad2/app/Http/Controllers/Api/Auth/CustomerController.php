@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop;
 use App\Models\User;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
@@ -16,6 +18,7 @@ class CustomerController extends Controller
 
     public function login(Request $request)
     {
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
@@ -33,23 +36,27 @@ class CustomerController extends Controller
         //Config::set('auth.guards.api.provider','admin');
 //    Artisan::call('config:clear');
 //        dd(\config('auth.guards.api.provider'));
-        if (!$token = auth('api')->attempt($validator->validated())) {
+        $checker=User::where('shop_id',$shop_id)->where('email',$request->email)->first();
+        $token = auth('api')->attempt(['email' => $request['email'], 'password' => $request['password']]);
+        if (!$token || is_null($checker)) {
             return $this->returnError(__('auth.failed'), 400);
         }
-
         return $this->createNewToken($token);
 
     }
 
     public function register(Request $request): \Illuminate\Http\JsonResponse
     {
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|min:3|max:255',
             'second_name' => 'required|string|min:3|max:255',
-            'email' =>  'required|email|unique:users',
+            'email' =>  [Rule::unique('users', 'email')
+                ->where('shop_id' , $shop_id)],
             'password' => 'required|confirmed|min:8',
             'phone_number' => 'required|unique:users|min:11',
             'address'=>'required',
+            'city'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -70,6 +77,8 @@ class CustomerController extends Controller
             'password' => Hash::make($request['password']),
             'phone_number' => $request->phone_number,
             'address' => $request->address,
+            'city'=>$request->city,
+            'shop_id'=>$shop_id
         ]);
 
         $token = auth('api')->attempt(['email' => $request['email'], 'password' => $request['password']]);
