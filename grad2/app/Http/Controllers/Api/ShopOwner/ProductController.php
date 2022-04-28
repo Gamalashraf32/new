@@ -95,37 +95,6 @@ class ProductController extends Controller
             return $this->returnError('Product not found',404);
         }
 
-        $options = Option::where('product_id',$product->id);
-        foreach ($options as $option){
-           $option->update([
-                'name' => $request->option
-            ]);
-            $options->save();
-        }
-
-        //dd($request);
-
-        if(!$options)
-        {
-            return $this->returnError('Option not found',404);
-        }
-
-        $variants = ProductVariant::where('product_id',$product->id);
-
-        foreach ($variants as $variant)
-        {
-            $optionid = Option::where('product_id',$product->id)->where('name',$variant['option'])->first()->id;
-            $variant->update([
-                'option_id' => $optionid,
-                'quantity' => $variant['quantity'],
-                'value' => $variant['value']
-            ]);
-        }
-
-        if (!$variants)
-        {
-            return $this->returnError('Variant can not found', 404);
-        }
         $product->update($request->all());
 
         if($product)
