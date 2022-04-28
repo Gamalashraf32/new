@@ -21,16 +21,16 @@ Route::post('super-admin-login', 'App\Http\Controllers\Api\Auth\AdminController@
 Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-shop-owner'], function () {
     Route::post('login', 'ShopOwnerController@login');
     Route::post('register', 'ShopOwnerController@register');
-    Route::get('profile', 'ShopOwnerController@profile');
-    Route::post('logout', 'ShopOwnerController@logout');
+    Route::get('profile', 'ShopOwnerController@profile')->middleware('auth.guard:shop_owner');
+    Route::post('logout', 'ShopOwnerController@logout')->middleware('auth.guard:shop_owner');
 });
 #===========================================Customer-auth============================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-customer'], function () {
 
     Route::post('login', 'CustomerController@login');
     Route::post('register', 'CustomerController@register');
-    Route::get('profile', 'CustomerController@profile');
-    Route::post('logout', 'CustomerController@logout');
+    Route::get('profile', 'CustomerController@profile')->middleware('auth.guard:api');
+    Route::post('logout', 'CustomerController@logout')->middleware('auth.guard:api');
 });
 #===========================================ShopOwner=================================================
 
@@ -124,7 +124,8 @@ Route::get('paymob-callback', 'App\Http\Controllers\Api\PaymobController@process
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
 Route::Post('send-email', 'App\Http\Controllers\Api\ShopOwner\ForgotPasswordController@invoke');
 Route::post('reset-password', 'App\Http\Controllers\Api\ShopOwner\ForgotPasswordController@reset');
-
+Route::Post('send-email-customer', 'App\Http\Controllers\Api\Customer\ForgotPasswordControllerCustomer@invoke');
+Route::post('reset-password-customer', 'App\Http\Controllers\Api\Customer\ForgotPasswordControllerCustomer@reset');
 #============================================================================================================
 Route::group(['middleware'=>['auth.guard:api','check.shop','stop.serve'],'namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
 

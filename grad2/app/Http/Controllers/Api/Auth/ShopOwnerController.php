@@ -99,11 +99,7 @@ class ShopOwnerController extends Controller
 
     public function profile()
     {
-//        $user = auth('shop_owner')->user();
-//        if (Carbon::make($user->expires_at)->lt(Carbon::now())) {
-//            $user->is_active = false;
-//            $user->save();
-//        }
+
         if (auth('shop_owner')->user()) {
             return $this->returnData('shop_owner_info', auth('shop_owner')->user()->makeHidden([ "created_at","updated_at"]), '200');
         } else {

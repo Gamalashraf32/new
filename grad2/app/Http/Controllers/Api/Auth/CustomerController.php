@@ -89,7 +89,7 @@ class CustomerController extends Controller
     public function profile()
     {
         if (auth('api')->user()) {
-            return $this->returnData('customer-profile', auth('api')->user(), '200');
+            return $this->returnData('customer- profile', auth('api')->user(), '200');
         } else {
             return $this->returnError('you are not authorized to show this data', 401, false);
         }

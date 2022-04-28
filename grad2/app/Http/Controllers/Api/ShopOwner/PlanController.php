@@ -46,7 +46,6 @@ class PlanController extends Controller
         ShopOwner::where('id',$user->id)->update(['plan_id' => $plan->id,'payment_status'=>'pending']);
         $paymob = new PayMobController();
         return $paymob->checkingOut($user->id, $to_pay);
-
     }
 
 
