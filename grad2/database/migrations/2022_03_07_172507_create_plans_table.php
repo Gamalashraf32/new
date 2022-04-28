@@ -18,6 +18,7 @@ class CreatePlansTable extends Migration
             $table->string('name');
             $table->string('duration');
             $table->integer('cost');
+            $table->double('fees', 8, 2);
             $table->timestamps();
         });
     }

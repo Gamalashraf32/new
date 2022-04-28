@@ -81,6 +81,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 #========================================Theme=====================================================
     Route::post('chooseTheme', 'ThemeController@chooseTheme');
     Route::post('update', 'ThemeController@update');
+    Route::get('show-theme-info', 'ThemeController@show_theme_info');
 #========================================Theme=====================================================
 
 #========================================CRUDCustomer=====================================================
@@ -137,7 +138,7 @@ Route::group(['middleware'=>['auth.guard:api','check.shop','stop.serve'],'namesp
     Route::post('add_product', 'CartController@add_product');
     Route::post('update_product/{id}', 'CartController@update_product');
     Route::post('delete_product/{id}', 'CartController@delete_product');
-    Route::post('show', 'CartController@show');
+    Route::post('show-cart', 'CartController@show');
     Route::post('place_order', 'CartController@place_order');
 
 

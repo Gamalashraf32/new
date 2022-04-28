@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Shipping extends Model
 {
     protected $fillable = [
-        'government','shop_id','price'
+        'government','shop_id','price','duration'
     ];
     use HasFactory;
 }

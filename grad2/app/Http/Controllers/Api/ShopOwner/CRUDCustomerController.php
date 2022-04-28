@@ -33,7 +33,8 @@ class CRUDCustomerController extends Controller
                 'required',
                 Rule::unique('users','phone_number')->where('shop_id' , $shop_id),
             ],
-            'address' => 'required'
+            'address' => 'required',
+            'city'=>'required'
         ]);
 
         if ($validator->fails()) {

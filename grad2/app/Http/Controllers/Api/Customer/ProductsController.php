@@ -16,7 +16,7 @@ class ProductsController extends Controller
     public function showallProducts(Request $request)
     {
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
-        $product  = Product::whereHas('category', function ($query) use($shop_id) {
+        $product  = Product::with('image')->with('pvariant')->with('options')->whereHas('category', function ($query) use($shop_id) {
             $query->where('shop_id',$shop_id);
         })->get();
         if (!$product) {
@@ -33,7 +33,7 @@ class ProductsController extends Controller
         {
             return $this->returnError('not found',404);
         }
-        $Product=Product::where('category_id',$category)->get();
+        $Product=Product::with('image')->with('pvariant')->with('options')->where('category_id',$category)->get();
         if($Product)
         {
             return $this->returnData('ok',$Product,200);
@@ -45,7 +45,7 @@ class ProductsController extends Controller
     public function showprouctid(Request $request,$id)
     {
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
-        $product  = Product::whereHas('category', function ($query) use($shop_id) {
+        $product  = Product::with('image')->with('pvariant')->with('options')->whereHas('category', function ($query) use($shop_id) {
             $query->where('shop_id',$shop_id);
         })->find($id);
         if (!$product) {
@@ -68,20 +68,5 @@ class ProductsController extends Controller
           return $this->returnError('no data found',404);
        }
     }
-    public function get()
-    {
-        $shop_id=auth('api')->user()->shop()->value('id');
-        $shop_owner=ShopOwner::whereHas('shop',function ($query) use($shop_id)
-        {
-            $query->where('id',$shop_id) ;
-        })->first();
-        if($shop_owner->is_active==1)
-        {
-            //dosomething
-        }
-        else
-        {
-            //do some thing
-        }
-    }
+
 }

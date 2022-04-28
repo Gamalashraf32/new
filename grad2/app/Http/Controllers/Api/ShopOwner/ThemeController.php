@@ -57,5 +57,11 @@ class ThemeController extends Controller
         $theme->update($request->all());
         return $this->returnSuccess("Theme updated",200);
     }
+    public function show_theme_info()
+    {
+        $shop_id=auth('shop_owner')->user()->shop()->value('id');
+        $theme=Theme::where('shop_id',$shop_id)->first();
+        return $this->returnData('theme info',$theme,200);
+    }
 
 }

@@ -11,6 +11,13 @@ class Productimage extends Model
     protected $fillable = [
         'product_id', 'image',
     ];
+    protected $hidden = [
+        'id',
+        'product_id',
+        'activated',
+        'created_at',
+        'updated_at',
+    ];
     public function product()
     {
         return $this->belongsTo(Product::class);

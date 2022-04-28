@@ -47,13 +47,10 @@ class PayMobController extends Controller
 
 
 
-        $code=Tempid::first();
-        if (is_null($code)) {
+
             Tempid::create([
                 'code' => $order->id
-            ]);
-        }
-
+                ]);
 
         $json_final=$response_final->json();
         $response_final_final=Http::withHeaders([

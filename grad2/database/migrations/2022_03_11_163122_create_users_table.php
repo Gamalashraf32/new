@@ -24,8 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('notes')->nullable();
             $table->integer('order_count')->nullable();
             $table->integer('total_spent')->nullable();
-            $table->integer('balance')->nullable();
-            $table->string('payment_method')->nullable();
             $table->string('city');
             $table->string('address');
             $table->unsignedBigInteger('shop_id');
