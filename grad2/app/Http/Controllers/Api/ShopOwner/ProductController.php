@@ -14,6 +14,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use function PHPUnit\Framework\isEmpty;
 
 class ProductController extends Controller
@@ -22,9 +23,10 @@ class ProductController extends Controller
     use ImageUpload;
     public function addProduct(Request $request)
     {
-
+        $user=auth('shop_owner')->user();
+        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => [Rule::unique('products', 'name')->where('shop_id' , $shop_id)],
             'description' => 'required',
             'price' => 'required',
             'brand' => 'required',
@@ -40,8 +42,7 @@ class ProductController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-        $user=auth('shop_owner')->user();
-        $shop_id=Shop::where('shop_owner_id',$user->id)->value('id');
+
         $product = Product::create([
             'shop_id' => $shop_id,
             'category_id' => $request->category_id,
@@ -85,10 +86,8 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function updateProduct(Request $request,$id)
     {
-        $user=auth('shop_owner')->user();
-         $product=Product::whereHas('shop', function ($query) use($user) {
-               $query->where('shop_owner_id',$user->id) ;
-           })->find($id);
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        $product=Product::where('shop_id',$shop_id)->find($id);
 
         if(!$product)
         {
@@ -107,10 +106,8 @@ class ProductController extends Controller
     public function deleteProduct($id)
     {
 
-        $user=auth('shop_owner')->user();
-        $product=Product::whereHas('shop', function ($query) use($user) {
-            $query->where('shop_owner_id',$user->id) ;
-        })->find($id);
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        $product=Product::where('shop_id',$shop_id)->find($id);
 
         if(!$product)
         {
@@ -122,11 +119,9 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function showProduct()
     {
-        $user=auth('shop_owner')->user();
-        $product=Product::whereHas('shop', function ($query) use($user) {
-            $query->where('shop_owner_id',$user->id);
-        })->get();
-        if(!isEmpty($product))
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        $product=Product::where('shop_id',$shop_id)->get();
+        if(!is_null($product))
         {
             return $this->returnData('ok',$product,200);
         }
@@ -136,9 +131,6 @@ class ProductController extends Controller
     public function showProductwithid($id)
     {
         $shop_id=auth('shop_owner')->user()->shop()->first()->value('id');
-        /*$product=Product::whereHas('shop', function ($query) use($user) {
-            $query->where('shop_owner_id',$user->id);
-        })->get();*/
         $product=Product::where('id',$id)->first();
         $options=Option::where('product_id',$product->id)->get();
         $vatiants=ProductVariant::where('product_id',$product->id)->get();
@@ -153,6 +145,20 @@ class ProductController extends Controller
         {
             return $this->returnData('ok',$data,200);
         }
-        return $this->returnError('Product not found',404);
+        return $this->returnError('Product not found',400);
+    }
+#==========================================================================================================================
+    public function validator(Request $request)
+    {
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        $product=Product::where('shop_id',$shop_id)->where('name',$request->name)->first();
+        if($product)
+        {
+            return $this->returnData('Product found',$product,200);
+        }
+        else
+        {
+            return $this->returnError('Product not found',400);
+        }
     }
 }

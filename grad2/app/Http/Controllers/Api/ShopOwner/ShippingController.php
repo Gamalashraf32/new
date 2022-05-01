@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ShopOwner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shipping;
+use App\Models\User;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -36,6 +37,7 @@ class ShippingController extends Controller
         ]);
         return $this->returnSuccess('shipping info saved successfully', 200);
     }
+
     public function update(Request $request,$id){
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
@@ -62,6 +64,7 @@ class ShippingController extends Controller
         ]);
         return $this->returnSuccess('shipping info updated successfully', 200);
     }
+
     public function delete($id)
     {
 
@@ -74,6 +77,7 @@ class ShippingController extends Controller
         $shipping->delete();
         return $this->returnSuccess('shipping info deleted successfully', 200);
     }
+
     public function show()
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
@@ -83,6 +87,7 @@ class ShippingController extends Controller
         }
         return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","created_at"]), 200);
     }
+
     public function showid($id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
@@ -91,6 +96,14 @@ class ShippingController extends Controller
             return $this->returnError(' no shipping like that', 404, true);
         }
         return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","crated_at"]), 200);
+    }
+
+    public function calculate_shipping(Request $request)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $customer = User::where('shop_id', $shop_id)->where('email',$request->email)->value('city');
+        $ship= Shipping::where('shop_id', $shop_id)->where('government',$customer)->value('price');
+        return $this->returnData('the shipping price', $ship, 200);
     }
 
 }

@@ -40,7 +40,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-info', 'ShopOwnerInfoController@update');
 
 #========================================category=====================================================
-    Route::post('add-category', 'CategoryController@addCategory');
+    Route::post('add-category', 'CategoryController@addCategory');//->middleware(['NoCategories']);;
     Route::post('update-category/{id}', 'CategoryController@updateCategory');
     Route::get('delete-category/{id}', 'CategoryController@deletecat');
     Route::get('show-category', 'CategoryController@showcat');
@@ -48,11 +48,12 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 #========================================category=====================================================
 
 #========================================Product=====================================================
-    Route::post('add-product', 'ProductController@addProduct');
+    Route::post('add-product', 'ProductController@addProduct');//->middleware(['NoProducts','Noimages','ManualProduct']);
     Route::post('update-product/{id}', 'ProductController@updateProduct');
     Route::post('delete-product/{id}', 'ProductController@deleteProduct');
     Route::get('show-product', 'ProductController@showProduct');
     Route::get('show-product/{id}', 'ProductController@showProductwithid');
+    Route::post('validate-product', 'ProductController@validator');
 #========================================Product=====================================================
 
 #========================================option=====================================================
@@ -71,11 +72,12 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 #========================================Variant=====================================================
 
 #========================================Discount==================================================
-    Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');
+    Route::post('add-discountcode', 'DiscountCodeController@adddiscountcode');//->middleware(['Discountcodes']);
     Route::post('delete-discountcode/{id}', 'DiscountCodeController@deletediscount');
     Route::get('show-discounts', 'DiscountCodeController@showall');
     Route::post('update-discountcode/{id}', 'DiscountCodeController@update');
     Route::get('show-discount/{id}', 'DiscountCodeController@showone');
+    Route::post('validate-discount', 'DiscountCodeController@validator');
 #========================================Discount==================================================
 
 #========================================Theme=====================================================
@@ -90,11 +92,12 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-customer/{id}', 'CRUDCustomerController@update');
     Route::get('delete-customer/{id}', 'CRUDCustomerController@delete');
     Route::get('show-customer', 'CRUDCustomerController@showcustomer');
-    Route::get('choose-plan', 'PlanController@choose');
+    Route::post('validate-customer', 'CRUDCustomerController@validator');
 #========================================CRUDCustomer=====================================================
 
 #========================================shipping=====================================================
     Route::post('shipping-add', 'ShippingController@add');
+    Route::post('calculate_shipping', 'ShippingController@calculate_shipping');
     Route::post('shipping-update/{id}', 'ShippingController@update');
     Route::post('shipping-delete/{id}', 'ShippingController@delete');
     Route::get('shipping-show', 'ShippingController@show');
@@ -155,3 +158,4 @@ Route::group(['middleware'=>['auth.guard:api','check.shop','stop.serve'],'namesp
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
 #===========================================mailing=================================================
 
+Route::get('shop/show-theme', 'App\Http\Controllers\Api\ShopOwner\ThemeController@show_theme')->middleware(['check.shop']);

@@ -4,6 +4,11 @@ namespace App\Http;
 
 use App\Http\Middleware\Assignguard;
 use App\Http\Middleware\Checkshop;
+use App\Http\Middleware\Discountcodes;
+use App\Http\Middleware\ManualProduct;
+use App\Http\Middleware\NoCategories;
+use App\Http\Middleware\Noimages;
+use App\Http\Middleware\NoProducts;
 use App\Http\Middleware\Stopserve;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -68,6 +73,11 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.guard'  => Assignguard::class,
         'check.shop' => Checkshop::class,
-        'stop.serve' => Stopserve::class
+        'stop.serve' => Stopserve::class,
+        'NoProducts' => NoProducts::class,
+        'Noimages' => Noimages::class,
+        'Discountcodes' => Discountcodes::class,
+        'ManualProduct' => ManualProduct::class,
+        'NoCategories' => NoCategories::class,
     ];
 }

@@ -133,4 +133,17 @@ class CRUDCustomerController extends Controller
         $customer->delete($id);
         return $this->returnSuccess('Customer deleted', 200);
     }
+
+    public function validator(Request $request)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $customer = User::where('shop_id', $shop_id)->where('email',$request->email)->first();
+        if($customer)
+        {
+            return $this->returnSuccess('Customer found', 200);
+        }
+        else{
+            return $this->returnError('Customer not found', 400);
+        }
+    }
 }

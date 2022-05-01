@@ -63,5 +63,11 @@ class ThemeController extends Controller
         $theme=Theme::where('shop_id',$shop_id)->first();
         return $this->returnData('theme info',$theme,200);
     }
+    public function show_theme(Request $request)
+    {
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
+        $theme=Theme::where('shop_id',$shop_id)->first();
+        return $this->returnData('theme info',$theme,200);
+    }
 
 }

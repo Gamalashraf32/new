@@ -152,4 +152,24 @@ class DiscountCodeController extends Controller
             return "Code not exist";
         }
     }
+
+    public function validator(Request $request)
+    {
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
+        $discount=DiscountCode::where('shop_id',$shop_id)->where('code',$request->code)->first();
+        if($discount)
+        {
+            $mytime = Carbon::today()->toDateString();
+            if($discount->ends_at->gte($mytime)&&$discount->starts_at->lte($mytime)) {
+                return $this->returnData("code found", $discount, 200);
+            }
+            else
+            {
+                return $this->returnError("Code is expired", 400);
+            }
+        }
+        else {
+            return $this->returnError("Code not exist", 400);
+        }
+    }
 }
