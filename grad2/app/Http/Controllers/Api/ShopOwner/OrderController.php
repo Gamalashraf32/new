@@ -30,14 +30,9 @@ class OrderController extends Controller
         }
         foreach ($request['products'] as $product_order)
         {
-            $product_id  = Product::where('name',$product_order['product_name'])->
-            whereHas('category', function ($query) use($shop_id) {
-                $query->where('shop_id',$shop_id);
-            })->value('id');
-            //$product_id=Product::where('name',$product_order['product_name'])->value('id');
+            $product_id  = Product::where('shop_id',$shop_id)->where('name',$product_order['product_name'])->value('id');
 
-            $cat_id=Product::where('id',$product_id)->value('category_id');
-            if($shop_id!=Category::where('id',$cat_id)->value('shop_id'))
+            if(is_null($product_id))
             {
                 return $this->returnError($product_order['product_name']." not found",400);
             }
@@ -58,17 +53,10 @@ class OrderController extends Controller
                 }
                 $user_id = User::where('shop_id',$shop_id)->where('email', $request->email)->value('id');
                 $order = Order::create([
+                    'shop_id'=>$shop_id,
                     'shop_user_id' => $user_id,
                     'note' => $request->note,
                 ]);
-                if(is_null($request->shop_id))
-                {
-                    $order->shop_id = $shop_id;
-                }
-                else
-                {
-                    $order->shop_id = $request->shop_id;
-                }
                 foreach ($request['products'] as $product_order) {
                     $product_id = Product::where('name', $product_order['product_name'])->value('id');
                     $product_variant1 = ProductVariant::where('product_id', $product_id)
@@ -113,7 +101,7 @@ class OrderController extends Controller
             });
         }catch (\Exception $exception)
         {
-            return $this->returnError('Something went wrong try again',400);
+            return $this->returnError("something is wrong, please try again",400);
         }
         return $this->returnSuccess("Order Placed",200);
     }
