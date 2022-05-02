@@ -22,11 +22,11 @@ class CreateCartProductsTable extends Migration
             $table->foreign('cart_id')->on('carts')->references('id')
                 ->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedBigInteger('product_id');
-            $table->string('variant1');
+            $table->string('variant1')->nullable();
             $table->string('variant2')->nullable();
             $table->string('product_name');
             $table->integer('quantity')->default(0);
-            $table->double('price', 8, 2)->default(0);
+            $table->double('price', 10, 2)->default(0);
             $table->timestamps();
         });
     }

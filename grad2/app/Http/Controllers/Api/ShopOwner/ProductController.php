@@ -68,14 +68,16 @@ class ProductController extends Controller
       }
 
         foreach ($request['variant'] as $variant){
-
-            $option_id = Option::where('product_id',$product->id)->where('name',$variant['option'])->first()->id;
-                ProductVariant::create([
-                'option_id' => $option_id,
+                $pro_var = ProductVariant::create([
                 'product_id' => $product->id,
                 'quantity' => $variant['quantity'],
                 'value' => $variant['value']
            ]);
+            if(!is_null($variant['option'])){
+                $option_id = Option::where('product_id',$product->id)->where('name',$variant['option'])->first()->id;
+                $pro_var->option_id = $option_id;
+                $pro_var->save();
+            }
 
         }
         DB::commit();
