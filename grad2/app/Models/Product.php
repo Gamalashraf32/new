@@ -12,7 +12,7 @@ class Product extends Model
     //use \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $fillable = [
-        'category_id','shop_id', 'name', 'description', 'price', 'brand',
+        'category_id','shop_id', 'name', 'description', 'price', 'brand','ProductImage'
     ];
 
     public function category()
@@ -32,9 +32,4 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
-
-    /*public function shop()
-    {
-        return $this->belongsToThrough(Shop::class, Category::class);
-    }*/
 }

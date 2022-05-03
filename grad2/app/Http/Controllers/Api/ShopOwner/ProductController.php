@@ -51,23 +51,33 @@ class ProductController extends Controller
             'price' => $request->price,
             'brand' => $request->brand,
         ]);
+        $imgnum=0;
         foreach ($request->file('images') as $image) {
+            $imgnum++;
             Productimage::create([
                 'product_id' => $product->id,
                 'image' => $this->uploadImage($image, 'products-images', 60)
             ]);
+            if($imgnum==1){
+                $product->ProductImage = $this->uploadImage($image, 'products-images', 60);
+                $product->save();
+            }
+
         }
         DB::beginTransaction();
 
-      foreach ($request['options'] as $option) {
 
+
+      foreach ($request['options'] as $option) {
+          if(!is_null($option)){
           Option::create([
-              'product_id'=>$product->id,
+              'product_id' => $product->id,
               'name' => $option
-          ]);
+          ]);}
       }
 
         foreach ($request['variant'] as $variant){
+            
                 $pro_var = ProductVariant::create([
                 'product_id' => $product->id,
                 'quantity' => $variant['quantity'],
@@ -78,6 +88,7 @@ class ProductController extends Controller
                 $pro_var->option_id = $option_id;
                 $pro_var->save();
             }
+        
 
         }
         DB::commit();
