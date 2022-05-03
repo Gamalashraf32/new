@@ -130,7 +130,7 @@ Route::post('reset-password', 'App\Http\Controllers\Api\ShopOwner\ForgotPassword
 Route::Post('send-email-customer', 'App\Http\Controllers\Api\Customer\ForgotPasswordControllerCustomer@invoke');
 Route::post('reset-password-customer', 'App\Http\Controllers\Api\Customer\ForgotPasswordControllerCustomer@reset');
 #============================================================================================================
-Route::group(['middleware'=>['auth.guard:api','check.shop','stop.serve'],'namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
+Route::group(['middleware'=>[/*'auth.guard:api',*/'check.shop','stop.serve'],'namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
 
     Route::get('show-cat', 'CategoryController@showcat');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
