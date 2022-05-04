@@ -19,7 +19,7 @@ class Stopserve
         $shop_owner=ShopOwner::where('site_name',$incoming_shop)->first();
         $exp_data=$shop_owner->expires_at;
         $now=Carbon::today()->toDateString();
-        if($exp_data->gte($now)) {
+        if(!is_null($exp_data)&&$exp_data->gte($now)) {
             return $next($request);
         }
         else
