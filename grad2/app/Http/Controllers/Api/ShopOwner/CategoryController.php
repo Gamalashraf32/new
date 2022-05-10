@@ -107,7 +107,7 @@ class CategoryController extends Controller
         }
 
 
-        return $this->returnData('your categories', $cat->makeHidden(['id','shop_id','created_at','updated_at']), 200);
+        return $this->returnData('your categories', $cat->makeHidden(['shop_id','created_at','updated_at']), 200);
     }
 #==========================================================================================================================
     public function showcatid($id)

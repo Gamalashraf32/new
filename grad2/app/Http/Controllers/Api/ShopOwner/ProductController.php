@@ -77,7 +77,7 @@ class ProductController extends Controller
       }
 
         foreach ($request['variant'] as $variant){
-            
+
                 $pro_var = ProductVariant::create([
                 'product_id' => $product->id,
                 'quantity' => $variant['quantity'],
@@ -88,7 +88,7 @@ class ProductController extends Controller
                 $pro_var->option_id = $option_id;
                 $pro_var->save();
             }
-        
+
 
         }
         DB::commit();
@@ -144,7 +144,7 @@ class ProductController extends Controller
     public function showProductwithid($id)
     {
         $shop_id=auth('shop_owner')->user()->shop()->first()->value('id');
-        $product=Product::where('id',$id)->first();
+        $product=Product::where('shop_id',$shop_id)->where('id',$id)->first();
         $options=Option::where('product_id',$product->id)->get();
         $vatiants=ProductVariant::where('product_id',$product->id)->get();
         $images=Productimage::where('product_id',$product->id)->get();
