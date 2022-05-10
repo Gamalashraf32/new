@@ -143,19 +143,20 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function showProductwithid($id)
     {
-        $shop_id=auth('shop_owner')->user()->shop()->first()->value('id');
+        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
         $product=Product::where('shop_id',$shop_id)->where('id',$id)->first();
-        $options=Option::where('product_id',$product->id)->get();
-        $vatiants=ProductVariant::where('product_id',$product->id)->get();
-        $images=Productimage::where('product_id',$product->id)->get();
-        $data=[
-            'product'=>$product,
-            'options'=>$options,
-            'variants'=>$vatiants,
-            'image'=>$images
-        ];
+
         if($product)
         {
+            $options=Option::where('product_id',$product->id)->get();
+            $vatiants=ProductVariant::where('product_id',$product->id)->get();
+            $images=Productimage::where('product_id',$product->id)->get();
+            $data=[
+                'product'=>$product,
+                'options'=>$options,
+                'variants'=>$vatiants,
+                'image'=>$images
+            ];
             return $this->returnData('ok',$data,200);
         }
         return $this->returnError('Product not found',400);
@@ -167,7 +168,16 @@ class ProductController extends Controller
         $product=Product::where('shop_id',$shop_id)->where('name',$request->name)->first();
         if($product)
         {
-            return $this->returnData('Product found',$product,200);
+            $options=Option::where('product_id',$product->id)->get();
+            $vatiants=ProductVariant::where('product_id',$product->id)->get();
+            $images=Productimage::where('product_id',$product->id)->get();
+            $data=[
+                'product'=>$product,
+                'options'=>$options,
+                'variants'=>$vatiants,
+                'image'=>$images
+            ];
+            return $this->returnData('product found',$data,200);
         }
         else
         {
