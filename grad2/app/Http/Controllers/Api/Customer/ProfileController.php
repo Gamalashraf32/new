@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EditInfoOfUser;
 use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\Shipping;
 use App\Models\Shop;
 use App\Models\User;
 use App\Traits\ResponseTrait;
@@ -61,12 +63,26 @@ class ProfileController extends Controller
     {
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $user = auth('api')->user();
-        $orders = Order::where('shop_id',$shop_id)->where('shop_user_id', $user->id)->get();
-        if(isEmpty($orders))
-        {
-            return $this->returnData('Here are the orders',$orders,200);
+        $orders=Order::where('shop_id',$shop_id)->where('shop_user_id',$user->id)->get();
+        if($orders) {
+            $orders_list = array();
+            foreach ($orders as $order){
+                $o_products = OrderProduct::where('order_id', $order->id)->get();
+                $orders_list[] = [
+                    'status' => $order->status,
+                    'note' => $order->note,
+                    'subtotal_price' => $order->subtotal_price,
+                    'discounts' => $order->discounts,
+                    'shipping_price' => $order->shipping_price,
+                    'total_price' => $order->total_price,
+                    'Products' => $o_products
+                ];
+            }
+                return $this->returnData("Your Order ", $orders_list, 200);
         }
-        return $this->returnError('No order here',404);
+        else{
+            return $this->returnError("Order Not Found", 400);
+        }
 
     }
 
@@ -82,6 +98,16 @@ class ProfileController extends Controller
         }
         return $this->returnError('No order here',404);
 
+    }
+
+    public function showcities(Request $request)
+    {
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
+        $ship= Shipping::where('shop_id', $shop_id)->get();
+        if (!$ship) {
+            return $this->returnError(' no shipping info yet', 404, true);
+        }
+        return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","created_at","duration","price"]), 200);
     }
 
 }

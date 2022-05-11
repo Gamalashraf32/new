@@ -130,21 +130,25 @@ Route::post('reset-password', 'App\Http\Controllers\Api\ShopOwner\ForgotPassword
 Route::Post('send-email-customer', 'App\Http\Controllers\Api\Customer\ForgotPasswordControllerCustomer@invoke');
 Route::post('reset-password-customer', 'App\Http\Controllers\Api\Customer\ForgotPasswordControllerCustomer@reset');
 #============================================================================================================
-Route::group(['middleware'=>[/*'auth.guard:api',*/'check.shop','stop.serve'],'namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
+Route::group(['middleware'=>['check.shop',/*'stop.serve'*/],'namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
 
     Route::get('show-cat', 'CategoryController@showcat');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
-    Route::get('show-cat-Products/{name}', 'ProductsController@showCatProducts');
-    Route::get('shop_owner', 'ProductsController@get');
+    Route::get('show-cat-Products/{id}', 'ProductsController@showCatProducts');
     Route::get('show-Product-id/{id}', 'ProductsController@showprouctid');
     Route::get('show-all-products', 'ProductsController@showallProducts');
-    Route::get('search-product/{name}', 'ProductsController@searchproduct');
+    Route::get('search-product/{id}', 'ProductsController@searchproduct');
+    Route::get('showcities', 'ProfileController@showcities');
+
+});
+#============================================================================================================
+Route::group(['middleware'=>['check.shop','auth.guard:api',/*'stop.serve'*/],'namespace' => 'App\Http\Controllers\Api\Customer', 'prefix' => 'Customer'], function () {
+
     Route::post('add_product', 'CartController@add_product');
     Route::post('update_product/{id}', 'CartController@update_product');
     Route::post('delete_product/{id}', 'CartController@delete_product');
     Route::post('show-cart', 'CartController@show');
     Route::post('place_order', 'CartController@place_order');
-
 
     Route::post('editinfo', 'ProfileController@editinfo');
     Route::get('all-orders', 'ProfileController@showallorders');

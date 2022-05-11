@@ -43,6 +43,14 @@ class CartController extends Controller
         }
 
         $product=Product::where('shop_id',$shop_id)->where('name',$request->name)->first();
+        if(is_null($product))
+        {
+            return $this->returnError($request->name." not found",400);
+        }
+        if((new OrderController)->check_quantity($request->variant1, $request->variant2, $product->id, $request->quantity))
+        {
+            return $this->returnError($request->name." not found in stock",400);
+        }
         $variant_id2=ProductVariant::where('product_id',$product->id)->where('value',$request->variant2)->first();
         $cartproduct=CartProducts::create([
             'shop_id'=> $shop_id,
@@ -103,17 +111,23 @@ class CartController extends Controller
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $user = auth('api')->user();
         $cart=Cart::where('shop_id',$shop_id)->where('shop_user_id',$user->id)->first();
-        $products=CartProducts::where('cart_id',$cart->value('id'))->get();
-        $data = [
-            'email'=>$user->email,
-            'shop_id'=>$shop_id,
-            'note'=>$request->note,
-            'discounts'=>$request->discounts,
-            'products'=>$products
-        ];
-        $request_order=new Request($data);
-        $order=(new OrderController)->add_order($request_order);
-        $cart->delete($cart->id);
-        return $this->returnSuccess($order, 200);
+        if($cart) {
+            $products = CartProducts::where('cart_id', $cart->value('id'))->get();
+            $data = [
+                'email' => $user->email,
+                'shop_id' => $shop_id,
+                'note' => $request->note,
+                'discounts' => $request->discounts,
+                'products' => $products
+            ];
+            $request_order = new Request($data);
+            $order = (new OrderController)->add_order($request_order);
+            $cart->delete($cart->id);
+            return $this->returnSuccess($order, 200);
+        }
+        else
+        {
+            return $this->returnError("no products in the cart",400);
+        }
     }
 }

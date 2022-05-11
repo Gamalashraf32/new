@@ -25,10 +25,10 @@ class ProductsController extends Controller
         return $this->returnData('chosen product info', $product, 200);
     }
 
-    public function showCatProducts(Request $request,$name)
+    public function showCatProducts(Request $request,$id)
     {
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
-        $category=Category::where('shop_id',$shop_id)->where('name',$name)->value('id');
+        $category=Category::where('shop_id',$shop_id)->where('id',$id)->value('id');
         if(!$category)
         {
             return $this->returnError('not found',404);

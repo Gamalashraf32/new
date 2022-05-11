@@ -85,7 +85,7 @@ class ShippingController extends Controller
         if (!$ship) {
             return $this->returnError(' no shipping info yet', 404, true);
         }
-        return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","created_at"]), 200);
+        return $this->returnData('your shipping info is', $ship->makeHidden(["shop_id","updated_at","created_at"]), 200);
     }
 
     public function showid($id)
@@ -95,7 +95,7 @@ class ShippingController extends Controller
         if (!$ship) {
             return $this->returnError(' no shipping like that', 404, true);
         }
-        return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","crated_at"]), 200);
+        return $this->returnData('your shipping info is', $ship->makeHidden(["shop_id","updated_at","crated_at"]), 200);
     }
 
     public function calculate_shipping(Request $request)
