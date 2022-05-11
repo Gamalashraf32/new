@@ -134,7 +134,7 @@ Route::group(['middleware'=>[/*'auth.guard:api',*/'check.shop','stop.serve'],'na
 
     Route::get('show-cat', 'CategoryController@showcat');
     Route::get('show-cat-id/{id}', 'CategoryController@showcatid');
-    Route::get('show-cat-Products', 'ProductsController@showCatProducts');
+    Route::get('show-cat-Products/{name}', 'ProductsController@showCatProducts');
     Route::get('shop_owner', 'ProductsController@get');
     Route::get('show-Product-id/{id}', 'ProductsController@showprouctid');
     Route::get('show-all-products', 'ProductsController@showallProducts');
