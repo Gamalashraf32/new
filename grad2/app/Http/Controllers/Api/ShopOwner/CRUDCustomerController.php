@@ -9,7 +9,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\gamal;
+use App\Http\Resources\showCustomerInfo;
 use App\Http\Resources\ShowCustomerByID;
 use Illuminate\Validation\Rule;
 
@@ -76,7 +76,7 @@ class CRUDCustomerController extends Controller
         $customers = User::where([['shop_id', $shop_id]])->get();
 
         if ($customers) {
-            return $this->returnData('ok', new gamal($customers), 400);
+            return $this->returnData('ok', $customers, 400);
         }
         return $this->returnError('Customers dose not exists', 404);
     }

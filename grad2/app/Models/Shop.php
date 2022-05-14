@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Shop extends Model
 {
     protected $fillable = [
-        'name','shop_owner_id'
+        'name',
+        'shop_owner_id',
+        'slogan',
+        'facebook',
+        'instagram',
+        'address',
+        'phone_number',
     ];
     use HasFactory;
 

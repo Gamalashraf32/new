@@ -88,13 +88,14 @@ class ShopOwnerController extends Controller
         Shop::create([
             'name' => $request->site_name,
             'shop_owner_id' => $shop_owner->id,
-        ]);
+            'address'=> $request->site_address,
+            'phone_number' => $request->phone_number,
 
+        ]);
 
         DB::commit();
         $token = auth('shop_owner')->attempt(['email' => $request['email'], 'password' => $request['password']]);
         return $this->createNewToken($token);
-
     }
 
     public function profile()
@@ -124,4 +125,5 @@ class ShopOwnerController extends Controller
             ],
             200);
     }
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ShopOwner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Shop;
 use App\Models\ShopOwner;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -47,16 +48,14 @@ class ShopOwnerInfoController extends Controller
         }
         $user=auth('shop_owner')->user();
         $user->first_name = $request->first_name;
-            $user->second_name = $request->second_name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request['password']);
-            $user->phone_number = $request->phone_number;
-            $user->site_name = $request->site_name;
-            $user->site_address = $request->site_address;
-            $user->country = $request->country;
-            $user->government = $request->government;
-            $user->city = $request->city;
-            $user->save();
+        $user->second_name = $request->second_name;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+        $user->country = $request->country;
+        $user->government = $request->government;
+        $user->city = $request->city;
+        $user->save();
         return $this->returnSuccess('your data updated successfully', 200);
     }
+
 }

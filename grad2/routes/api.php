@@ -23,6 +23,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
     Route::post('register', 'ShopOwnerController@register');
     Route::get('profile', 'ShopOwnerController@profile')->middleware('auth.guard:shop_owner');
     Route::post('logout', 'ShopOwnerController@logout')->middleware('auth.guard:shop_owner');
+    Route::post('add_details', 'ShopOwnerController@add_details');
 });
 #===========================================Customer-auth============================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-customer'], function () {
@@ -38,6 +39,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
 Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Controllers\Api\ShopOwner', 'prefix' => 'shop-owner'], function () {
 
     Route::post('update-info', 'ShopOwnerInfoController@update');
+    Route::post('add-details', 'Shopdetails@adddetails');
+    Route::post('update-details', 'Shopdetails@updatedetails');
+
+
 
 #========================================category=====================================================
     Route::post('add-category', 'CategoryController@addCategory');//->middleware(['NoCategories']);;

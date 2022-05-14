@@ -23,6 +23,11 @@ class CreateShopsTable extends Migration
             $table->string('swifter_domain')->nullable();
             $table->integer('has_discount')->default(1);
             $table->string('time_zone')->nullable();
+            $table->string('slogan')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('address')->nullable();
+            $table->integer('phone_number')->unique();
             $table->timestamps();
         });
     }

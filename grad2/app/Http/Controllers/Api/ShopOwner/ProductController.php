@@ -62,37 +62,7 @@ class ProductController extends Controller
                 $product->ProductImage = $this->uploadImage($image, 'products-images', 60);
                 $product->save();
             }
-
         }
-        DB::beginTransaction();
-
-
-
-      foreach ($request['options'] as $option) {
-          if(!is_null($option)){
-          Option::create([
-              'product_id' => $product->id,
-              'name' => $option
-          ]);}
-      }
-
-        foreach ($request['variant'] as $variant){
-
-                $pro_var = ProductVariant::create([
-                'product_id' => $product->id,
-                'quantity' => $variant['quantity'],
-                'value' => $variant['value']
-           ]);
-            if(!is_null($variant['option'])){
-                $option_id = Option::where('product_id',$product->id)->where('name',$variant['option'])->first()->id;
-                $pro_var->option_id = $option_id;
-                $pro_var->save();
-            }
-
-
-        }
-        DB::commit();
-
         return $this->returnSuccess('product saved successfully', 200);
     }
 
