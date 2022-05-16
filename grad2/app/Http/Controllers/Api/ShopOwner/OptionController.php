@@ -43,11 +43,12 @@ class OptionController extends Controller
     public function updateoption(Request $request,$id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
-        $option = Option::whereHas('cat', function ($query) use ($shop_id) {
-            $query->where('shop_id',$shop_id);
-        })->find($id);
-
-        if(!$option)
+        $option = Option::find($id);
+        if($option)
+        {
+            $shop_id_product=Product::where('id',$option->product_id)->value('shop_id');
+        }
+        if(!$option||($shop_id!=$shop_id_product))
         {
             return $this->returnError('Option not found',404);
         }
@@ -63,11 +64,12 @@ class OptionController extends Controller
     public function deleteoption($id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
-        $option = Option::whereHas('cat', function ($query) use ($shop_id) {
-            $query->where('shop_id',$shop_id);
-        })->find($id);
-
-        if(!$option)
+        $option = Option::find($id);
+        if($option)
+        {
+            $shop_id_product=Product::where('id',$option->product_id)->value('shop_id');
+        }
+        if(!$option||($shop_id!=$shop_id_product))
         {
             return $this->returnError('Option not found',404);
         }

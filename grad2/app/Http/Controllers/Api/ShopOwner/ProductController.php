@@ -63,7 +63,7 @@ class ProductController extends Controller
                 $product->save();
             }
         }
-        return $this->returnSuccess('product saved successfully', 200);
+        return $this->returnData('product saved successfully',$product->id, 200);
     }
 
 #==========================================================================================================================

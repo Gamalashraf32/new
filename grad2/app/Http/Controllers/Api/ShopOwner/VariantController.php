@@ -49,11 +49,12 @@ class VariantController extends Controller
     public function updatevariant(Request $request,$id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
-        $variant = ProductVariant::whereHas('cate', function ($query) use ($shop_id) {
-            $query->where('shop_id',$shop_id);
-        })->find($id);
-
-        if (!$variant) {
+        $variant = ProductVariant::find($id);
+        if($variant)
+        {
+            $shop_id_product=Product::where('id',$variant->product_id)->value('shop_id');
+        }
+        if (!$variant||($shop_id!=$shop_id_product)) {
             return $this->returnError('Variant can not found', 404);
         }
 
@@ -70,12 +71,12 @@ class VariantController extends Controller
     public function deletevariant($id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
-        $variant = ProductVariant::whereHas('cate', function ($query) use ($shop_id) {
-            $query->where('shop_id',$shop_id);
-        })->find($id);
-
-        if (!$variant)
+        $variant = ProductVariant::find($id);
+        if($variant)
         {
+            $shop_id_product=Product::where('id',$variant->product_id)->value('shop_id');
+        }
+        if (!$variant||($shop_id!=$shop_id_product)) {
             return $this->returnError('Variant not found',404);
         }
         $variant->delete();

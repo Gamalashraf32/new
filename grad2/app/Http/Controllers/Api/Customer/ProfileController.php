@@ -69,6 +69,7 @@ class ProfileController extends Controller
             foreach ($orders as $order){
                 $o_products = OrderProduct::where('order_id', $order->id)->get();
                 $orders_list[] = [
+                    'id'=>$order->id,
                     'status' => $order->status,
                     'note' => $order->note,
                     'subtotal_price' => $order->subtotal_price,

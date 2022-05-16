@@ -144,6 +144,7 @@ Route::group(['middleware'=>['check.shop',/*'stop.serve'*/],'namespace' => 'App\
     Route::get('show-all-products', 'ProductsController@showallProducts');
     Route::get('search-product/{id}', 'ProductsController@searchproduct');
     Route::get('showcities', 'ProfileController@showcities');
+    Route::post('validate-discount', 'DiscountCodeController@validator');
 
 });
 #============================================================================================================

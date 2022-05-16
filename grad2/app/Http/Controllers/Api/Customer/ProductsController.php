@@ -33,7 +33,7 @@ class ProductsController extends Controller
         {
             return $this->returnError('not found',404);
         }
-        $Product=Product::with('image')->with('pvariant')->with('options')->where('category_id',$category)->get();
+        $Product=Product::with('image')->with('pvariant')->with('options')->where('shop_id',$shop_id)->where('category_id',$category)->get();
         if($Product)
         {
             return $this->returnData('ok',$Product,200);
