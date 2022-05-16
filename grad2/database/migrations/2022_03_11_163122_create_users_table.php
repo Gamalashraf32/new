@@ -22,8 +22,9 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('phone_number')->unique();
             $table->string('notes')->nullable();
-            $table->integer('order_count')->nullable();
-            $table->integer('total_spent')->nullable();
+            $table->integer('order_count')->default(0);
+            $table->double('total_spent', 10, 2)->default(0);;
+            $table->double('balance', 10, 2)->default(0);
             $table->string('city');
             $table->string('address');
             $table->unsignedBigInteger('shop_id');

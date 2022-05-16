@@ -115,6 +115,8 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update_order/{id}', 'OrderController@update');
     Route::get('show-orders', 'OrderController@showall_orders');
     Route::get('show-order/{id}', 'OrderController@show_order');
+    Route::get('show_refund', 'OrderController@show_refund');
+    Route::post('refund_status/{id}', 'OrderController@refund_status');
 #========================================Order=====================================================
 
 #========================================plan=====================================================
@@ -155,6 +157,7 @@ Route::group(['middleware'=>['check.shop','auth.guard:api',/*'stop.serve'*/],'na
     Route::post('delete_product/{id}', 'CartController@delete_product');
     Route::post('show-cart', 'CartController@show');
     Route::post('place_order', 'CartController@place_order');
+    Route::post('refund_request/{id}', 'ProfileController@create');
 
     Route::post('editinfo', 'ProfileController@editinfo');
     Route::get('all-orders', 'ProfileController@showallorders');

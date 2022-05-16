@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EditInfoOfUser;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\Refund;
 use App\Models\Shipping;
 use App\Models\Shop;
 use App\Models\User;
@@ -83,6 +84,22 @@ class ProfileController extends Controller
             return $this->returnError(' no shipping info yet', 404, true);
         }
         return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","created_at","duration","price"]), 200);
+    }
+
+    public function create(Request $request,$id){
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
+        $order=Order::find($id);
+        if($order){
+         Refund::create([
+            'shop_id'=>$shop_id,
+            'order_id'=>$id,
+            'reason'=>$request->reason
+        ]);
+        return $this->returnSuccess("Refund is requested",200);
+        }
+        else{
+            return $this->returnError("Order not found",404);
+        }
     }
 
 }

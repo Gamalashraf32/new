@@ -42,6 +42,7 @@ class CategoryController extends Controller
             'shop_id' => $shop_id,
             'name' => $request->name,
             'description' => $request->description,
+            'extra_shipping' => $request->extra_shipping
         ]);
 
 

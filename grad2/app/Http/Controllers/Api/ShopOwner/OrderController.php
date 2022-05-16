@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ShopOwner\DiscountCodeController;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Refund;
 use App\Models\Shipping;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -59,6 +60,9 @@ class OrderController extends Controller
                 ]);
                 foreach ($request['products'] as $product_order) {
                     $product_id = Product::where('name', $product_order['product_name'])->value('id');
+                    $category= Category::where('id',Product::where('name', $product_order['product_name'])
+                        ->value('category_id'))->first()->extra_shipping;
+                    $order->increment('extra_shipping', $category);
                     $product_variant1 = ProductVariant::where('product_id', $product_id)
                         ->where('value', $product_order['variant1'])->first();
                     $product_variant2=ProductVariant::where('product_id',$product_id)
@@ -81,8 +85,8 @@ class OrderController extends Controller
                     }
                     $order->increment('subtotal_price', $order_product->quantity * $order_product->price);
                 }
-                $user = User::where('email', $request->email)->value('city');
-                $ship_price= Shipping::where('shop_id',$shop_id)->where('government',$user)->value('price');
+                $user = User::where('email', $request->email)->first();
+                $ship_price= Shipping::where('shop_id',$shop_id)->where('government',$user->city)->value('price');
                 if(!is_null($request->discounts))
                 {
                     $dis =(new DiscountCodeController)->calculate_discount($request->discounts,$order->subtotal_price);
@@ -96,7 +100,22 @@ class OrderController extends Controller
                     }
                 }
                 $order->increment('shipping_price', $ship_price);
-                $order->increment('total_price', ($order->subtotal_price + $ship_price) - $order->discounts);
+                $order->increment('total_price', ($order->subtotal_price + $ship_price + $order->extra_shipping) - $order->discounts);
+                if($user->balance>0){
+                    if($user->balance > $order->total_price){
+                        $order->total_price = 0;
+                        $user->decrement('balance',$order->total_price);
+                        $order->increment('user_balance',$order->total_price);
+                        $order->save();
+                    }
+                    else{
+                        $order->decrement('total_price',$user->balance);
+                        $order->increment('user_balance',$user->balance);
+                        $user->balance = 0;
+                        $order->save();
+                        $user->save();
+                    }
+                }
 
             });
         }catch (\Exception $exception)
@@ -164,6 +183,9 @@ class OrderController extends Controller
                             $product_var2->increment('quantity', $product->quantity);
                         }
                     }
+                    $user = User::where('shop_user_id',$order->shop_user_id)->first();
+                    $user->increment('balance',$order->user_balance);
+                    $user->save();
                     $order->status = $request->status;
                     $order->save();
                     return $this->returnSuccess("Order cancelled", 200);
@@ -218,6 +240,8 @@ class OrderController extends Controller
             return $this->returnError("Order Not Found", 400);
         }
     }
+
+
     public function check_quantity($variant1,$variant2,$product_id,$quantity)
     {
         $product_variant1=ProductVariant::where('product_id',$product_id)
@@ -243,6 +267,71 @@ class OrderController extends Controller
                 return false;
             }
         }
+    }
+
+
+    public function refund_status(Request $request,$id){
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
+        $refund=Refund::where('shop_id',$shop_id)->find($id);
+        if($refund){
+            if($request->status == 'Reviewing' && ( $refund->status!='Refunded' || $refund->status!='Declined'))
+            {
+                $refund->status = $request->status;
+                $refund->details = $request->details;
+                return $this->returnSuccess("Order is under review", 200);
+            }
+            elseif ($request->status == 'Declined' && $refund->status!='Refunded'){
+                $refund->status = $request->status;
+                $refund->details = $request->details;
+                return $this->returnError('Order cant be returned',400);
+            }
+            elseif ($request->status == 'Refunded'){
+                $refund->status = $request->status;
+                $refund->details = $request->details;
+                $order = Order::where('id',$refund->order_id)->first();
+                $order->status = 'Refunded';
+                $products = OrderProduct::where('order_id', $id)->get();
+                foreach ($products as $product) {
+                    $product_var1 = ProductVariant::where('product_id', $product->product_id)
+                        ->where('value', $product->variant1)->first();
+                    $product_var2 = ProductVariant::where('product_id', $product->product_id)
+                        ->where('value', $product->variant2)->first();
+                    if ($product_var1) {
+                        $product_var1->increment('quantity', $product->quantity);
+                    }
+                    if ($product_var2) {
+                        $product_var2->increment('quantity', $product->quantity);
+                    }
+                }
+                $order->save();
+                $refund->save();
+                $user = User::where('id',$order->shop_user_id)->first();
+                $user->increment('balance', $order -> total_price - $order -> shipping_price - $order -> extra_shipping);
+                $user->save();
+                return $this->returnSuccess("Order refunded", 200);
+            }
+        }
+        else{
+            return $this->returnError('Order not found',404);
+        }
+    }
+
+    public function show_refund()
+    {
+        $shop_id =auth('shop_owner')->user()->shop()->first()->id;
+        $refunds=Refund::where('shop_id',$shop_id)->get();
+        if($refunds) {
+            $orders_list = array();
+            foreach ($refunds as $refund) {
+                $order = Order::where('id', $refund->order_id)->first();
+                $orders_list[] = [
+                    'order_details' => $order->makeHidden(["status"]),
+                    'refund_details' => $refund
+                ];
+            }
+            return $this->returnData("Your refunded orders",$orders_list,200);
+        }
+        return $this->returnError("No refunded orders found",404);
     }
 
 }

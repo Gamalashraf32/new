@@ -26,6 +26,8 @@ class CreateOrdersTable extends Migration
             $table->double('subtotal_price', 10, 2)->default(0);
             $table->double('discounts', 10, 2)->default(0);
             $table->double('shipping_price', 10, 2)->default(0);
+            $table->double('extra_shipping', 10, 2)->default(0);
+            $table->double('user_balance', 10, 2)->default(0);
             $table->double('total_price', 10, 2)->default(0);
             $table->timestamps();
         });
