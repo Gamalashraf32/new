@@ -21,32 +21,6 @@ class ProfileController extends Controller
 
     public function editinfo(Request $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|min:3|max:255',
-            'second_name' => 'required|string|min:3|max:255',
-            'email' => [
-                'required',
-                Rule::unique('users','email')->ignore(auth('api')->user()->id),
-            ],
-            'password' => 'required|confirmed',
-            'phone_number' => [
-                'required',
-                Rule::unique('users','phone_number')->ignore(auth('api')->user()->id),
-            ],
-            'address' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            $errors = [];
-            foreach ($validator->errors()->getMessages() as $message) {
-                $error = implode($message);
-                $errors[] = $error;
-            }
-            return $this->returnError(implode(' , ', $errors), 400);
-        }
-
-
         $user = auth('api')->user();
         if(!$user)
         {
