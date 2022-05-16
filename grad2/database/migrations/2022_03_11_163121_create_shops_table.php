@@ -28,6 +28,7 @@ class CreateShopsTable extends Migration
             $table->string('instagram')->nullable();
             $table->string('address')->nullable();
             $table->integer('phone_number')->unique();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

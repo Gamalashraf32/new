@@ -23,7 +23,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-
     Route::post('register', 'ShopOwnerController@register');
     Route::get('profile', 'ShopOwnerController@profile')->middleware('auth.guard:shop_owner');
     Route::post('logout', 'ShopOwnerController@logout')->middleware('auth.guard:shop_owner');
-    Route::post('add_details', 'ShopOwnerController@add_details');
+   // Route::post('add_details', 'ShopOwnerController@add_details');
 });
 #===========================================Customer-auth============================================
 Route::group(['namespace' => 'App\Http\Controllers\Api\Auth', 'prefix' => 'auth-customer'], function () {
@@ -172,3 +172,4 @@ Route::group(['middleware'=>['check.shop','auth.guard:api',/*'stop.serve'*/],'na
 #===========================================mailing=================================================
 
 Route::get('shop/show-theme', 'App\Http\Controllers\Api\ShopOwner\ThemeController@show_theme')->middleware(['check.shop']);
+Route::get('show-details', 'App\Http\Controllers\Api\ShopOwner\Shopdetails@showdetails');
