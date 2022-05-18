@@ -18,9 +18,8 @@ class VariantController extends Controller
   public function addvariant(Request $request)
      {
         $validator = Validator::make($request->all(), [
-            'option_id'=>'required',
             'product_id'=>'required',
-            'value'=>'required'
+            'quantity'=>'required'
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -35,14 +34,17 @@ class VariantController extends Controller
             return $this->returnError('you are not authorized to edit this data', 401, false);
         }
 
-        ProductVariant::create([
-
-            'option_id' => $request->option_id,
+        $variant=ProductVariant::create([
             'product_id' => $request->product_id,
-            'value' => $request->value,
             'quantity' => $request->quantity
-
         ]);
+        if($request->option_id){
+            $variant->option_id = $request->option_id;
+        }
+        if($request->value){
+            $variant->value = $request->value;
+        }
+        $variant->save();
         return $this->returnSuccess('variant saved successfully', 200);
       }
 #==========================================================================================================================
@@ -89,6 +91,18 @@ class VariantController extends Controller
         $variant = ProductVariant::whereHas('cate', function ($query) use ($shop_id) {
             $query->where('shop_id',$shop_id);
         })->find($id);
+
+        if($variant)
+        {
+            return $this->returnData('ok ',$variant,200 );
+        }
+        return $this->returnError('No variant stored',404);
+    }
+#==========================================================================================================================
+    public function showvariantproduct($id)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $variant = ProductVariant::where('product_id',$id)->get();
 
         if($variant)
         {

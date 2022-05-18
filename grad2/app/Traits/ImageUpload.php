@@ -24,9 +24,10 @@ trait ImageUpload
         if ($width == true or $height == true) {
             $image_resize->resize($width, $height);
         }
-
+        $image->storeAs('/', $file_name, 'azure');
         $image_resize->save($path . '/' . $file_name, $quality);
-        return $path . '/' . $file_name;
+        //return $path . '/' . $file_name;
+        return "https://websitebuilderegg.blob.core.windows.net/image/".$file_name;
     }
 
 }

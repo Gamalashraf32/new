@@ -18,6 +18,7 @@ class OptionController extends Controller
     public function addoption(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'product_id'=>'required',
             'name' => 'required'
         ]);
         if ($validator->fails())
@@ -96,6 +97,17 @@ class OptionController extends Controller
         $option = Option::whereHas('cat', function ($query) use ($shop_id) {
             $query->where('shop_id',$shop_id);
         })->find($id);
+
+        if($option){
+            return $this->returnData('ok',$option,200);
+        }
+        return $this->returnError('No option stored',404);
+    }
+#==========================================================================================================================
+    public function showoptionproduct($id)
+    {
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $option = Option::where('product_id',$id)->get();
 
         if($option){
             return $this->returnData('ok',$option,200);

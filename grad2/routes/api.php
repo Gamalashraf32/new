@@ -67,6 +67,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('delete-option/{id}', 'OptionController@deleteoption');
     Route::get('show-option', 'OptionController@showoption');
     Route::get('show-option/{id}', 'OptionController@showoptionwithid');
+    Route::get('option-product/{id}', 'OptionController@showoptionproduct');
 #========================================option=====================================================
 
 #========================================Variant=====================================================
@@ -74,6 +75,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-variant/{id}', 'VariantController@updatevariant');
     Route::post('delete-variant/{id}', 'VariantController@deletevariant');
     Route::get('show-variant/{id}', 'VariantController@showvariantwithid');
+    Route::get('variant-product/{id}', 'VariantController@showvariantproduct');
 #========================================Variant=====================================================
 
 #========================================Discount==================================================

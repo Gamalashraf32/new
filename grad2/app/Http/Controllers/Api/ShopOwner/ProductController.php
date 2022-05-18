@@ -54,12 +54,13 @@ class ProductController extends Controller
         $imgnum=0;
         foreach ($request->file('images') as $image) {
             $imgnum++;
+            $image_path=$this->uploadImage($image, 'products-images', 60);
             Productimage::create([
                 'product_id' => $product->id,
-                'image' => $this->uploadImage($image, 'products-images', 60)
+                'image' => $image_path
             ]);
             if($imgnum==1){
-                $product->ProductImage = $this->uploadImage($image, 'products-images', 60);
+                $product->ProductImage = $image_path;
                 $product->save();
             }
         }
