@@ -19,7 +19,7 @@ class OptionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id'=>'required',
-            'name' => 'required'
+            'option_name' => 'required'
         ]);
         if ($validator->fails())
         {
@@ -36,7 +36,7 @@ class OptionController extends Controller
         }
         Option::create([
             'product_id'=>$request->product_id,
-            'name' => $request->name
+            'name' => $request->option_name
         ]);
         return $this->returnSuccess('option saved successfully', 200);
     }
@@ -53,7 +53,9 @@ class OptionController extends Controller
         {
             return $this->returnError('Option not found',404);
         }
-        $option->update($request->except('product_id'));
+        $option->update([
+            'name' =>$request->option_name
+        ]);
         $option->save();
         if($option)
         {
