@@ -13,6 +13,9 @@ class ShowShopDetails extends JsonResource
         return [
 
             'name' => $this->name,
+            'slogan'=>$this->slogan,
+            'facebook'=>$this->facebook,
+            'instagram'=>$this->instagram,
             'address' => $this->address,
             'phone_number' => $this->phone_number,
             'description' =>$this->description,
