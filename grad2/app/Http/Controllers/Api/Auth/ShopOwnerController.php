@@ -103,7 +103,7 @@ class ShopOwnerController extends Controller
     {
 
         if (auth('shop_owner')->user()) {
-            return $this->returnData('shop_owner_info', auth('shop_owner')->user()->makeHidden([ "created_at","updated_at"]), '200');
+            return $this->returnData('shop_owner_info', auth('shop_owner')->user()->makeHidden(["password"]), '200');
         } else {
             return $this->returnError('you are not authorized to show this data', 401, false);
         }

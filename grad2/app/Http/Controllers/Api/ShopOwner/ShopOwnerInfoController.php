@@ -24,7 +24,6 @@ class ShopOwnerInfoController extends Controller
                 'required',
                 Rule::unique('shop_owners','email')->ignore(auth('shop_owner')->user()->id),
             ],
-            'password' => 'required|confirmed',
             'phone_number' => [
                 'required',
                 Rule::unique('shop_owners','phone_number')->ignore(auth('shop_owner')->user()->id),

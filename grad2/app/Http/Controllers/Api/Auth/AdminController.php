@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Shop;
+use App\Models\ShopOwner;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 
@@ -20,6 +23,7 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required',

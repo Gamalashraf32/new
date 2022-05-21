@@ -107,8 +107,7 @@ class CategoryController extends Controller
             return $this->returnError(' no categories yet', 404, true);
         }
 
-
-        return $this->returnData('your categories', $cat->makeHidden(['shop_id','created_at','updated_at']), 200);
+        return $this->returnData('your categories', $cat, 200);
     }
 #==========================================================================================================================
     public function showcatid($id)
@@ -119,6 +118,6 @@ class CategoryController extends Controller
         if (!$cat) {
             return $this->returnError(' category not found', 404, true);
         }
-        return $this->returnData('chosen categories', $cat->makeHidden(['id','shop_id','created_at','updated_at']), 200);
+        return $this->returnData('chosen categories', $cat, 200);
     }
 }
