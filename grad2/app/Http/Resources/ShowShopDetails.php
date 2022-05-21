@@ -16,6 +16,7 @@ class ShowShopDetails extends JsonResource
             'address' => $this->address,
             'phone_number' => $this->phone_number,
             'description' =>$this->description,
+            'email'=>$this->email,
         ];
 
     }

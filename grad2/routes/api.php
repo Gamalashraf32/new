@@ -41,6 +41,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::post('update-info', 'ShopOwnerInfoController@update');
     Route::post('add-details', 'Shopdetails@adddetails');
     Route::post('update-details', 'Shopdetails@updatedetails');
+    Route::get('show-detailsdb', 'Shopdetails@dbshowdetails');
 
 
 
