@@ -14,6 +14,7 @@ use Illuminate\Validation\Rule;
 class OptionController extends Controller
 {
     use ResponseTrait;
+<<<<<<< Updated upstream
 
     public function addoption(Request $request)
     {
@@ -56,6 +57,26 @@ class OptionController extends Controller
         $option->update([
             'name' =>$request->option_name
         ]);
+=======
+    public function updateoption(Request $request,$id)
+    {
+
+//        $user=auth('shop_owner')->user();
+//        $product=Product::whereHas('shop', function ($query) use($user) {
+//            $query->where('shop_owner_id',$user->id) ;
+//        })->find($id);
+
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $option = Option::whereHas('cat', function ($query) use ($shop_id) {
+            $query->where('shop_id',$shop_id);
+        })->find($id);
+
+        if(!$option)
+        {
+            return $this->returnError('Option not found',404);
+        }
+        $option->update($request->except('product_id'));
+>>>>>>> Stashed changes
         $option->save();
         if($option)
         {
