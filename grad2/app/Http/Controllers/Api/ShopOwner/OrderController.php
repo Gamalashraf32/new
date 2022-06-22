@@ -325,8 +325,14 @@ class OrderController extends Controller
             foreach ($refunds as $refund) {
                 $order = Order::where('id', $refund->order_id)->first();
                 $orders_list[] = [
-                    'order_details' => $order->makeHidden(["status"]),
-                    'refund_details' => $refund
+                    'id' => $refund->id,
+                    'customer id' => $order->shop_user_id,
+                    'order id' => $order->id,
+                    'total price' => $order->total_price,
+                    'refund status' => $refund->status,
+                    'details' => $refund->details,
+                    'reason' => $refund->reason,
+                    'created_at' => $refund->created_at
                 ];
             }
             return $this->returnData("Your refunded orders",$orders_list,200);

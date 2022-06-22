@@ -41,7 +41,7 @@ class PayMobController extends Controller
             "auth_token"=>$json['token'],
             "delivery_needed"=>"false",
             "amount_cents"=>$price*100,
-            "merchant_order_id" =>rand(10,100)
+            "merchant_order_id" =>rand(100,1000)
 
         ]);
 

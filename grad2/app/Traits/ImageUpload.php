@@ -13,19 +13,19 @@ trait ImageUpload
         // making a name to the image
         $file_extension = $image->getClientOriginalExtension();
         $file_name = Str::random(20) . '.' . $file_extension;
-        $path = 'gmS1gBS6N1plepfpcPCi/uploaded/' . $directory;
-        if (!is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
-        $image_resize = Image::make($image->getRealPath());
-        if ($image->getSize() > 5120) {
-            $image_resize->resize(1000, 700);
-        }
-        if ($width == true or $height == true) {
-            $image_resize->resize($width, $height);
-        }
+//        $path = 'gmS1gBS6N1plepfpcPCi/uploaded/' . $directory;
+//        if (!is_dir($path)) {
+//            mkdir($path, 0777, true);
+//        }
+//        $image_resize = Image::make($image->getRealPath());
+//        if ($image->getSize() > 5120) {
+//            $image_resize->resize(1000, 700);
+//        }
+//        if ($width == true or $height == true) {
+//            $image_resize->resize($width, $height);
+//        }
         $image->storeAs('/', $file_name, 'azure');
-        $image_resize->save($path . '/' . $file_name, $quality);
+        //$image_resize->save($path . '/' . $file_name, $quality);
         //return $path . '/' . $file_name;
         return "https://websitebuilderegg.blob.core.windows.net/image/".$file_name;
     }
