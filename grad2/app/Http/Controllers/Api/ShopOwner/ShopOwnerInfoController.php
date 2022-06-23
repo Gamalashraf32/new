@@ -28,11 +28,11 @@ class ShopOwnerInfoController extends Controller
                 'required',
                 Rule::unique('shop_owners','phone_number')->ignore(auth('shop_owner')->user()->id),
             ],
-            'site_name' => [
-                'required',
-                Rule::unique('shop_owners','site_name')->ignore(auth('shop_owner')->user()->id),
-            ],
-            'site_address' => 'required',
+            // 'site_name' => [
+            //     'required',
+            //     Rule::unique('shop_owners','site_name')->ignore(auth('shop_owner')->user()->id),
+            // ],
+            //'site_address' => 'required',
             'country' => 'required|string|min:3',
             'government' => 'required|string|min:3',
             'city' => 'required|string|min:3',
