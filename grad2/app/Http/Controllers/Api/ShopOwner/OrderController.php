@@ -278,11 +278,13 @@ class OrderController extends Controller
             {
                 $refund->status = $request->status;
                 $refund->details = $request->details;
+                $refund->save();
                 return $this->returnSuccess("Order is under review", 200);
             }
             elseif ($request->status == 'Declined' && $refund->status!='Refunded'){
                 $refund->status = $request->status;
                 $refund->details = $request->details;
+                $refund->save();
                 return $this->returnError('Order cant be returned',400);
             }
             elseif ($request->status == 'Refunded'){
