@@ -23,7 +23,9 @@ class CreateOrderProductsTable extends Migration
                 ->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedBigInteger('product_id');
             $table->string('variant1')->nullable();
+            $table->string('option1')->nullable();
             $table->string('variant2')->nullable();
+            $table->string('option2')->nullable();
             $table->string('name');
             $table->integer('quantity')->default(0);
             $table->double('price', 10, 2)->default(0);

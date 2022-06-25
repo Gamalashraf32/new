@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\ShopOwner;
 use App\Http\Controllers\Api\ShopOwner\DiscountCodeController;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Option;
 use App\Models\Product;
 use App\Models\Refund;
 use App\Models\Shipping;
@@ -76,12 +77,18 @@ class OrderController extends Controller
                         'quantity' => $product_order['quantity'],
                         'price' => Product::where('id', $product_id)->value('price')
                     ]);
+                    if(!is_null($product_variant1->option_id))
+                    {
+                        $order_product->option1 = Option::where('id',$product_variant1->option_id)->value('name');
+                        $order_product->save();
+                    }
                     ProductVariant::find($product_variant1->id)->decrement('quantity', $product_order['quantity']);
                     if($product_variant2)
                     {
                         $order_product->variant2 = $product_variant2->value;
                         ProductVariant::find($product_variant2->id)->decrement('quantity', $product_order['quantity']);
-
+                        $order_product->option2 = Option::where('id',$product_variant2->option_id)->value('name');
+                        $order_product->save();
                     }
                     $order->increment('subtotal_price', $order_product->quantity * $order_product->price);
                 }
@@ -331,7 +338,7 @@ class OrderController extends Controller
                     'customer id' => $order->shop_user_id,
                     'order id' => $order->id,
                     'total price' => $order->total_price,
-                    'refund status' => $refund->status,
+                    'refund_status' => $refund->status,
                     'details' => $refund->details,
                     'reason' => $refund->reason,
                     'created_at' => $refund->created_at
