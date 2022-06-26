@@ -89,7 +89,6 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 #========================================Discount==================================================
 
 #========================================Theme=====================================================
-    Route::post('chooseTheme', 'ThemeController@chooseTheme');
     Route::post('update', 'ThemeController@update');
     Route::get('show-theme-info', 'ThemeController@show_theme_info');
 #========================================Theme=====================================================
