@@ -90,7 +90,7 @@ class ShopOwnerController extends Controller
             'name' => $request->site_name,
             'shop_owner_id' => $shop_owner->id,
             'address'=> $request->site_address,
-            'phone_number' => $request->phone_number,
+           // 'phone_number' => $request->phone_number,
 
         ]);
 

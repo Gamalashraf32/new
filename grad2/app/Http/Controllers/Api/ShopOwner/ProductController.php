@@ -70,35 +70,41 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function updateProduct(Request $request,$id)
     {
-        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
-        $product=Product::where('shop_id',$shop_id)->find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $product = Product::where('shop_id', $shop_id)->find($id);
 
-        if(!$product)
-        {
-            return $this->returnError('Product not found',404);
+
+        if (!$product) {
+            return $this->returnError('Product not found', 404);
         }
 
         $product->update($request->all());
+        //  $productimg = Productimage::where('product_id',$product)->update();
 
-        if($product)
-        {
-            return $this->returnSuccess('Product Saved',200);
+        foreach ($request->file('images') as $image) {
+            $image_path = $this->uploadImage($image, 'products-images', 60);
+            Productimage::where('product_id', $product)->update([
+                'image' => $image_path
+            ]);
+
+            if ($product) {
+                return $this->returnSuccess('Product Saved', 200);
+            }
+            return $this->returnError('Product not saved', 400);
         }
-        return $this->returnError('Product not saved',400);
     }
 #==========================================================================================================================
     public function deleteProduct($id)
     {
 
-        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
-        $product=Product::where('shop_id',$shop_id)->find($id);
+        $shop_id = auth('shop_owner')->user()->shop()->first()->id;
+        $product = Product::where('shop_id', $shop_id)->find($id);
 
-        if(!$product)
-        {
-            return $this->returnError('Product not found',404);
+        if (!$product) {
+            return $this->returnError('Product not found', 404);
         }
         $product->delete();
-        return $this->returnSuccess('Product Deleted',200);
+        return $this->returnSuccess('Product Deleted', 200);
     }
 #==========================================================================================================================
     public function showProduct()

@@ -9,6 +9,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShowShopDetails;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class Shopdetails extends Controller
 {
@@ -19,9 +20,8 @@ class Shopdetails extends Controller
         $shop_owner_id = auth('shop_owner')->user();
 
         $validator = Validator::make($request->all(), [
-            'email' =>  'email|unique:shops,email',
             'phone_number' => 'unique:shops|min:11',
-            'site_name' => 'string|min:3|unique:shops',
+            'email' =>  'email|unique:shops,email',
         ]);
 
         if ($validator->fails()) {
@@ -34,11 +34,12 @@ class Shopdetails extends Controller
         }
 
             Shop::where('shop_owner_id',$shop_owner_id->id)->update([
-                'email'=>$request->email,
+                'email'=>$request->shop_email,
                 'slogan' => $request->slogan,
                 'description' => $request->description,
                 'instagram' => $request->instagram,
                 'facebook' => $request->facebook,
+                'phone_number' => $request->shop_phone_number,
             ]);
             return $this->returnSuccess("Details saved",200);
     }
@@ -46,11 +47,21 @@ class Shopdetails extends Controller
     public function updatedetails(Request $request){
 
         $shop_owner_id = auth('shop_owner')->user();
-
+        $shopid=auth('shop_owner')->user()->shop()->
+        value('id');
         $validator = Validator::make($request->all(), [
-            'email' =>  'email|unique:shops,email',
-            'phone_number' => 'unique:shops|min:11',
-            'site_name' => 'string|min:3|unique:shops',
+            'email' => [
+                'required',
+                Rule::unique('shops','email')->ignore($shopid)
+            ],
+            'shop_phone_number' => [
+                'required',
+                Rule::unique('shops','phone_number')->ignore($shopid),
+            ],
+            'name' => [
+                     'required',
+                     Rule::unique('shops','name')->ignore($shopid),
+                 ]
         ]);
 
         if ($validator->fails()) {
@@ -70,14 +81,12 @@ class Shopdetails extends Controller
             'facebook' => $request->facebook,
             'address'=>$request->address,
             'email'=>$request->email,
-            'phone_number'=>$request->phone_number
+            'phone_number'=>$request->shop_phone_number
         ]);
         ShopOwner::where('id',$shop_owner_id->id)->update([
 
             'site_address' => $request->address,
             'site_name'=> $request->name,
-            'phone_number'=>$request->phone_number
-
         ]);
 
         return $this->returnSuccess("Details saved",200);
