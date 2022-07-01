@@ -85,7 +85,6 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::get('show-discounts', 'DiscountCodeController@showall');
     Route::post('update-discountcode/{id}', 'DiscountCodeController@update');
     Route::get('show-discount/{id}', 'DiscountCodeController@showone');
-    Route::post('validate-discount', 'DiscountCodeController@validator');
 #========================================Discount==================================================
 
 #========================================Theme=====================================================
@@ -148,7 +147,6 @@ Route::group(['middleware'=>['check.shop',/*'stop.serve'*/],'namespace' => 'App\
     Route::get('show-all-products', 'ProductsController@showallProducts');
     Route::get('search-product/{id}', 'ProductsController@searchproduct');
     Route::get('showcities', 'ProfileController@showcities');
-    Route::post('validate-discount', 'DiscountCodeController@validator');
 
 });
 #============================================================================================================
@@ -175,3 +173,4 @@ Route::group(['middleware'=>['check.shop','auth.guard:api',/*'stop.serve'*/],'na
 
 Route::get('shop/show-theme', 'App\Http\Controllers\Api\ShopOwner\ThemeController@show_theme')->middleware(['check.shop']);
 Route::get('show-details', 'App\Http\Controllers\Api\ShopOwner\Shopdetails@showdetails');
+Route::post('validate-discount', 'App\Http\Controllers\Api\ShopOwner\DiscountCodeController@validator');
