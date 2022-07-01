@@ -103,7 +103,6 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 
 #========================================shipping=====================================================
     Route::post('shipping-add', 'ShippingController@add');
-    Route::post('calculate_shipping', 'ShippingController@calculate_shipping');
     Route::post('shipping-update/{id}', 'ShippingController@update');
     Route::post('shipping-delete/{id}', 'ShippingController@delete');
     Route::get('shipping-show', 'ShippingController@show');
@@ -174,3 +173,4 @@ Route::group(['middleware'=>['check.shop','auth.guard:api',/*'stop.serve'*/],'na
 Route::get('shop/show-theme', 'App\Http\Controllers\Api\ShopOwner\ThemeController@show_theme')->middleware(['check.shop']);
 Route::get('show-details', 'App\Http\Controllers\Api\ShopOwner\Shopdetails@showdetails');
 Route::post('validate-discount', 'App\Http\Controllers\Api\ShopOwner\DiscountCodeController@validator');
+Route::post('calculate_shipping', 'App\Http\Controllers\Api\ShopOwner\ShippingController@calculate_shipping');

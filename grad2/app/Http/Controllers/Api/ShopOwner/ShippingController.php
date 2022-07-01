@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ShopOwner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shipping;
+use App\Models\Shop;
 use App\Models\User;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
@@ -100,7 +101,7 @@ class ShippingController extends Controller
 
     public function calculate_shipping(Request $request)
     {
-        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $customer = User::where('shop_id', $shop_id)->where('email',$request->email)->value('city');
         $ship= Shipping::where('shop_id', $shop_id)->where('government',$customer)->value('price');
         return $this->returnData('the shipping price', $ship, 200);
