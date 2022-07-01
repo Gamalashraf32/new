@@ -72,26 +72,81 @@ class ProductController extends Controller
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
         $product = Product::where('shop_id', $shop_id)->find($id);
+        $validator = Validator::make($request->all(), [
+            'name' => [Rule::unique('products', 'name')->where('shop_id' , $shop_id)],
+            'description' => 'required',
+            'price' => 'required',
+            'brand' => 'required',
+        ]);
 
-
+        if ($validator->fails()) {
+            $errors = [];
+            foreach ($validator->errors()->getMessages() as $message) {
+                $error = implode($message);
+                $errors[] = $error;
+            }
+            return $this->returnError(implode(' , ', $errors), 400);
+        }
         if (!$product) {
             return $this->returnError('Product not found', 404);
         }
 
         $product->update($request->all());
-        //  $productimg = Productimage::where('product_id',$product)->update();
+                if ($product) {
+                    return $this->returnSuccess('Product Saved', 200);
+                }
+                return $this->returnError('Product not saved', 400);
+    }
+#==========================================================================================================================
+    public function Deleteproductimg($id)
+    {
+        $product_img = Productimage::where('id', $id);
 
+        if (!$product_img) {
+            return $this->returnError('Image not found', 404);
+        }
+        $product_img->delete();
+
+        return $this->returnSuccess('Image Deleted', 200);
+
+    }
+#==========================================================================================================================
+    public function Addproductimg(Request $request, $id)
+    {
+         $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $product = Product::where('shop_id', $shop_id)->find($id);
+        $validator = Validator::make($request->all(), [
+            'images' => 'required',
+            'images.*' => 'file|mimes:png,jpg,jpeg|max:4096',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = [];
+            foreach ($validator->errors()->getMessages() as $message) {
+                $error = implode($message);
+                $errors[] = $error;
+            }
+            return $this->returnError(implode(' , ', $errors), 400);
+        }
+        if(!$product){
+            return $this->returnError('No Product found',404);
+        }
+
+        $imgnum=0;
         foreach ($request->file('images') as $image) {
-            $image_path = $this->uploadImage($image, 'products-images', 60);
-            Productimage::where('product_id', $product)->update([
+            $imgnum++;
+            $image_path=$this->uploadImage($image, 'products-images', 60);
+            Productimage::create([
+                'product_id' => $product->id,
                 'image' => $image_path
             ]);
-
-            if ($product) {
-                return $this->returnSuccess('Product Saved', 200);
+            if($imgnum==1){
+                $product->ProductImage = $image_path;
+                $product->save();
             }
-            return $this->returnError('Product not saved', 400);
         }
+        return $this->returnData('Image saved successfully',$product->id, 200);
+
     }
 #==========================================================================================================================
     public function deleteProduct($id)

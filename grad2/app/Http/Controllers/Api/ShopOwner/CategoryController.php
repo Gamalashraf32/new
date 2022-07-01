@@ -24,7 +24,7 @@ class CategoryController extends Controller
     {
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'name' => [Rule::unique('categories', 'name')->where('shop_id' , $shop_id)],
+            'name' => ['required',Rule::unique('categories', 'name')->where('shop_id' , $shop_id)],
             'description' => 'required',
         ]);
         if ($validator->fails()) {
@@ -55,7 +55,8 @@ class CategoryController extends Controller
     {
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'name' => [Rule::unique('categories', 'name')->where('shop_id' , $shop_id)->ignore($id)]
+            'name' => ['required',Rule::unique('categories', 'name')->where('shop_id' , $shop_id)->ignore($id)],
+            'description' =>'required',
         ]);
         if ($validator->fails()) {
             $errors = [];

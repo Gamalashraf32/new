@@ -16,7 +16,7 @@ class ShippingController extends Controller
     public function add(Request $request){
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'government' => [Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)],
+            'government' => ['required',Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)],
             'price' => 'required',
             'duration'=>'required'
         ]);
@@ -41,7 +41,7 @@ class ShippingController extends Controller
     public function update(Request $request,$id){
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
-            'government' => [Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)->ignore($id)],
+            'government' => ['required',Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)->ignore($id)],
             'price' => 'required',
             'duration'=>'required'
         ]);

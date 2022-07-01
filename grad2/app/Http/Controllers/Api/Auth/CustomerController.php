@@ -51,7 +51,7 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|min:3|max:255',
             'second_name' => 'required|string|min:3|max:255',
-            'email' =>  [Rule::unique('users', 'email')
+            'email' =>  ['required',Rule::unique('users', 'email')
                 ->where('shop_id' , $shop_id)],
             'password' => 'required|confirmed|min:8',
             'phone_number' => 'required|unique:users|min:11',

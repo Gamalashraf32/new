@@ -98,7 +98,16 @@ class CRUDCustomerController extends Controller
 
         $shop_id = auth('shop_owner')->user()->shop()->first();
         $validate = Validator::make($request->all(), [
-            'email' => [Rule::unique('users', 'email')->where('shop_id' , $shop_id->id)->ignore($id)]
+            'email' => ['required',Rule::unique('users', 'email')->where('shop_id' , $shop_id->id)->ignore($id)],
+            'first_name' => 'required|string|min:3|max:255',
+            'second_name' => 'required|string|min:3|max:255',
+            'password' => 'required|confirmed',
+            'phone_number' => [
+                'required',
+                Rule::unique('users','phone_number')->where('shop_id' , $shop_id),
+            ],
+            'address' => 'required',
+            'city'=>'required'
         ]);
         if ($validate->fails()) {
             $errors = [];

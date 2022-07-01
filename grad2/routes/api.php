@@ -60,6 +60,8 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
     Route::get('show-product', 'ProductController@showProduct');
     Route::get('show-product/{id}', 'ProductController@showProductwithid');
     Route::post('validate-product', 'ProductController@validator');
+    Route::post('delete-product-img/{id}', 'ProductController@Deleteproductimg');
+    Route::post('add-product-img/{id}', 'ProductController@Addproductimg');
 #========================================Product=====================================================
 
 #========================================option=====================================================
