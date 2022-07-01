@@ -27,49 +27,32 @@ class CartController extends Controller
                 'shop_user_id' => $user_id
             ]);
         }
-        $validate = Validator::make($request->all(), [
-            'name' => 'required',
-            'quantity' => 'required',
-        ]);
-        if($validate->fails())
-        {
-            $errors=[];
-            foreach($validate->errors()->getMessages() as $message)
-            {
-                $error=implode($message);
-                $errors[]=$error;
+        foreach ($request['products'] as $product) {
+            $myproduct = Product::where('shop_id', $shop_id)->where('name', $product->name)->first();
+            if (is_null($myproduct)) {
+                return $this->returnError($product->name . " not found", 400);
             }
-            return $this->returnError(implode(' , ',$errors),400);
+            if ((new OrderController)->check_quantity($product->variant1, $product->variant2, $myproduct->id, $product->quantity)) {
+                return $this->returnError($product->name . " not found in stock", 400);
+            }
+            $variant_id2 = ProductVariant::where('product_id', $myproduct->id)->where('value', $product->variant2)->first();
+            $cartproduct = CartProducts::create([
+                'shop_id' => $shop_id,
+                'shop_user_id' => $user_id,
+                'cart_id' => $cart->id,
+                'product_id' => $myproduct->id,
+                'product_name' => $product->name,
+                'quantity' => $product->quantity,
+                'variant1' => $product->variant1,
+                'price' => $myproduct->price
+            ]);
+            if (!is_null($variant_id2)) {
+                $cartproduct->variant2 = $request->variant1;
+            }
+            $cart->increment('subtotal_price', $cartproduct->quantity * $cartproduct->price);
+            return $this->returnSuccess("Product Added", 200);
         }
-
-        $product=Product::where('shop_id',$shop_id)->where('name',$request->name)->first();
-        if(is_null($product))
-        {
-            return $this->returnError($request->name." not found",400);
-        }
-        if((new OrderController)->check_quantity($request->variant1, $request->variant2, $product->id, $request->quantity))
-        {
-            return $this->returnError($request->name." not found in stock",400);
-        }
-        $variant_id2=ProductVariant::where('product_id',$product->id)->where('value',$request->variant2)->first();
-        $cartproduct=CartProducts::create([
-            'shop_id'=> $shop_id,
-            'shop_user_id'=> $user_id,
-            'cart_id'=> $cart->id,
-            'product_id'=> $product->id,
-            'product_name'=> $request->name,
-            'quantity' => $request->quantity,
-            'variant1' => $request->variant1,
-            'price' => $product->price
-        ]);
-        if(!is_null($variant_id2))
-        {
-            $cartproduct->variant2 = $request->variant1;
-        }
-        $cart->increment('subtotal_price', $cartproduct->quantity * $cartproduct->price);
-        return $this->returnSuccess("Product Added",200);
     }
-
     public function delete_product($id)
     {
         $product = CartProducts::find($id);
