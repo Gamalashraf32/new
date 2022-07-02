@@ -57,7 +57,10 @@ class VariantController extends Controller
             $shop_id_product=Product::where('id',$variant->product_id)->value('shop_id');
         }
         if (!$variant||($shop_id!=$shop_id_product)) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             return $this->returnError('Variant can not found', 404);
         }
 
