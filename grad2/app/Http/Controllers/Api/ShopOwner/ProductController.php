@@ -73,7 +73,9 @@ class ProductController extends Controller
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
         $product = Product::where('shop_id', $shop_id)->find($id);
         $validator = Validator::make($request->all(), [
-            'name' => [Rule::unique('products', 'name')->where('shop_id' , $shop_id)],
+            'name' => ['required',
+                Rule::unique('products', 'name')
+                    ->where('shop_id' , $shop_id)->ignore($id) ],
             'description' => 'required',
             'price' => 'required',
             'brand' => 'required',
@@ -177,24 +179,23 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function showProductwithid($id)
     {
-        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
-        $product=Product::where('shop_id',$shop_id)->where('id',$id)->first();
+        $shop_id = auth('shop_owner')->user()->shop()->first()->id;
+        $product = Product::where('shop_id', $shop_id)->where('id', $id)->first();
 
-        if($product)
-        {
-            $options=Option::where('product_id',$product->id)->get();
-            $vatiants=ProductVariant::where('product_id',$product->id)->get();
-            $images=Productimage::where('product_id',$product->id)->get();
-            $data=[
-                'product'=>$product,
-                'options'=>$options,
-                'variants'=>$vatiants,
-                'image'=>$images
+        if ($product) {
+            $options = Option::where('product_id', $product->id)->get();
+            $vatiants = ProductVariant::where('product_id', $product->id)->get();
+            $images = Productimage::where('product_id', $product->id)->get();
+            $data = [
+                'product' => $product,
+                'options' => $options,
+                'variants' => $vatiants,
+                'image' => $images,
             ];
-            return $this->returnData('ok',$data,200);
+                return $this->returnData('ok', $data, 200);
+            }
+            return $this->returnError('Product not found', 400);
         }
-        return $this->returnError('Product not found',400);
-    }
 #==========================================================================================================================
     public function validator(Request $request)
     {

@@ -12,7 +12,11 @@ class Productimage extends Model
         'product_id', 'image',
     ];
     protected $hidden = [
+<<<<<<< Updated upstream
 
+=======
+       // 'id',
+>>>>>>> Stashed changes
         'product_id',
         'activated',
         'created_at',

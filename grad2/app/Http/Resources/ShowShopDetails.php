@@ -17,7 +17,7 @@ class ShowShopDetails extends JsonResource
             'facebook'=>$this->facebook,
             'instagram'=>$this->instagram,
             'address' => $this->address,
-            'phone_number' => $this->phone_number,
+            'shop_phone_number' => $this->phone_number,
             'description' =>$this->description,
             'email'=>$this->email,
         ];
