@@ -96,7 +96,7 @@ class OrderController extends Controller
                 $ship_price= Shipping::where('shop_id',$shop_id)->where('government',$user->city)->value('price');
                 if(!is_null($request->discounts))
                 {
-                    $dis =(new DiscountCodeController)->calculate_discount($request->discounts,$order->subtotal_price);
+                    $dis =(new DiscountCodeController)->calculate_discount($request->discounts,$order->subtotal_price,$request->shop_id);
                     if(is_int($dis))
                     {
                         $order->increment('discounts', $dis);

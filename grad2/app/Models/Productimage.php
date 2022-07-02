@@ -12,7 +12,7 @@ class Productimage extends Model
         'product_id', 'image',
     ];
     protected $hidden = [
-        'id',
+
         'product_id',
         'activated',
         'created_at',

@@ -87,10 +87,7 @@ class ProductController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         if (!$product) {
             return $this->returnError('Product not found', 404);
         }

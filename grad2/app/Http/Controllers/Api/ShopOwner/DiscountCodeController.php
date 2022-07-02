@@ -125,9 +125,8 @@ class DiscountCodeController extends Controller
         }
     }
 
-    public function calculate_discount($code,$total)
+    public function calculate_discount($code,$total,$shop_id)
     {
-        $shop_id=auth('shop_owner')->user()->shop()->first()->id;
         $dis_code=DiscountCode::where('shop_id',$shop_id)->where('code',$code)->first();
         if ($dis_code) {
             $mytime = Carbon::today()->toDateString();

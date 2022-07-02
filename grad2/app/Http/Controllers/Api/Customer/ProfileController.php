@@ -50,6 +50,7 @@ class ProfileController extends Controller
                     'subtotal_price' => $order->subtotal_price,
                     'discounts' => $order->discounts,
                     'shipping_price' => $order->shipping_price,
+                    'extra_shipping'=>$order->extra_shipping,
                     'total_price' => $order->total_price,
                     'Products' => $o_products
                 ];

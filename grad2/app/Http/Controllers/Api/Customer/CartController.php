@@ -39,7 +39,7 @@ class CartController extends Controller
                 return $this->returnError(implode(' , ', $errors), 400);
             }
         }
-        
+
             $product = Product::where('shop_id', $shop_id)->where('name', $request->name)->first();
             if (is_null($product)) {
                 return $this->returnError($request->name . " not found", 400);
@@ -113,7 +113,7 @@ class CartController extends Controller
                 'shop_id' => $shop_id,
                 'note' => $request->note,
                 'discounts' => $request->discounts,
-                'products' => $products
+                'products' => $products,
             ];
             $request_order = new Request($data);
             $order = (new OrderController)->add_order($request_order);
