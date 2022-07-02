@@ -101,7 +101,9 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function Deleteproductimg($id)
     {
-        $product_img = Productimage::where('id', $id);
+        $shop_id = auth('shop_owner')->user()->shop()->value('id');
+        $product = Product::where('shop_id', $shop_id)->value('id');
+        $product_img = Productimage::where('Product_id', $product)->find($id);
 
         if (!$product_img) {
             return $this->returnError('Image not found', 404);
@@ -133,10 +135,6 @@ class ProductController extends Controller
             return $this->returnError('No Product found',404);
         }
 
-
-        $product->update($request->all());
-
-
         $imgnum=0;
         foreach ($request->file('images') as $image) {
             $imgnum++;
@@ -156,7 +154,6 @@ class ProductController extends Controller
 #==========================================================================================================================
     public function deleteProduct($id)
     {
-
         $shop_id = auth('shop_owner')->user()->shop()->first()->id;
         $product = Product::where('shop_id', $shop_id)->find($id);
 
