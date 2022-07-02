@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class VariantController extends Controller
 {
     use ResponseTrait;
-<<<<<<< Updated upstream
 
   public function addvariant(Request $request)
      {
@@ -59,16 +58,6 @@ class VariantController extends Controller
         }
         if (!$variant||($shop_id!=$shop_id_product)) {
 
-=======
-    public function updatevariant(Request $request,$id)
-    {
-        $shop_id = auth('shop_owner')->user()->shop()->value('id');
-        $variant = ProductVariant::whereHas('cate', function ($query) use ($shop_id) {
-            $query->where('shop_id',$shop_id);
-        })->find($id);
-
-        if (!$variant) {
->>>>>>> Stashed changes
             return $this->returnError('Variant can not found', 404);
         }
 

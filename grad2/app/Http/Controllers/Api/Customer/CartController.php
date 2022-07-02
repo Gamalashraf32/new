@@ -28,26 +28,26 @@ class CartController extends Controller
             ]);
         }
         foreach ($request['products'] as $product) {
-            $myproduct = Product::where('shop_id', $shop_id)->where('name', $product->name)->first();
+            $myproduct = Product::where('shop_id', $shop_id)->where('name', $product['name'])->first();
             if (is_null($myproduct)) {
-                return $this->returnError($product->name . " not found", 400);
+                return $this->returnError($product['name'] . " not found", 400);
             }
-            if ((new OrderController)->check_quantity($product->variant1, $product->variant2, $myproduct->id, $product->quantity)) {
-                return $this->returnError($product->name . " not found in stock", 400);
+            if ((new OrderController)->check_quantity($product["variant1"], $product["variant2"], $myproduct->id, $product["quantity"])) {
+                return $this->returnError($product['name'] . " not found in stock", 400);
             }
-            $variant_id2 = ProductVariant::where('product_id', $myproduct->id)->where('value', $product->variant2)->first();
+            $variant_id2 = ProductVariant::where('product_id', $myproduct->id)->where('value', $product["variant2"])->first();
             $cartproduct = CartProducts::create([
                 'shop_id' => $shop_id,
                 'shop_user_id' => $user_id,
                 'cart_id' => $cart->id,
                 'product_id' => $myproduct->id,
-                'product_name' => $product->name,
-                'quantity' => $product->quantity,
-                'variant1' => $product->variant1,
+                'product_name' => $product['name'],
+                'quantity' => $product["quantity"],
+                'variant1' => $product["variant1"],
                 'price' => $myproduct->price
             ]);
             if (!is_null($variant_id2)) {
-                $cartproduct->variant2 = $request->variant1;
+                $cartproduct->variant2 = $product["variant1"];
             }
             $cart->increment('subtotal_price', $cartproduct->quantity * $cartproduct->price);
             return $this->returnSuccess("Product Added", 200);

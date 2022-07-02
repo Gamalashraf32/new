@@ -87,7 +87,7 @@ class ProductController extends Controller
             }
             return $this->returnError(implode(' , ', $errors), 400);
         }
-<<<<<<< Updated upstream
+
         if (!$product) {
             return $this->returnError('Product not found', 404);
         }
@@ -132,10 +132,10 @@ class ProductController extends Controller
         if(!$product){
             return $this->returnError('No Product found',404);
         }
-=======
+
 
         $product->update($request->all());
->>>>>>> Stashed changes
+
 
         $imgnum=0;
         foreach ($request->file('images') as $image) {
