@@ -130,7 +130,7 @@ Route::group(['middleware'=>'auth.guard:shop_owner','namespace' => 'App\Http\Con
 });
 #=========================================================================================================
 Route::get('show-plan', 'App\Http\Controllers\Api\ShopOwner\PlanController@show');
-Route::get('paymob-callback', 'App\Http\Controllers\Api\PaymobController@processedCallback');
+Route::get('paymob-callback', 'App\Http\Controllers\Api\PayMobController@processedCallback');
 #===========================================mailing=================================================
 //Auth::routes(['verify' => true]);
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
