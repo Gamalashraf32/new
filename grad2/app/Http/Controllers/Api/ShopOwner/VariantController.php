@@ -41,8 +41,11 @@ class VariantController extends Controller
         if($request->option_id){
             $variant->option_id = $request->option_id;
         }
-        if($request->value){
+        if($request->value && !is_null($request->option_id)){
             $variant->value = $request->value;
+        }
+        elseif ($request->value && is_null($request->option_id)){
+            return $this->returnError('You can not add value for variant without choosing and option', 401, false);
         }
         $variant->save();
         return $this->returnSuccess('variant saved successfully', 200);

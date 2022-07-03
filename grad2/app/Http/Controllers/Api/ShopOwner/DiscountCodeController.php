@@ -20,7 +20,6 @@ class DiscountCodeController extends Controller
             'code' => [Rule::unique('discount_codes', 'code')->where('shop_id' , $shop_id)],
             'type'=>'required',
             'value'=>'required|numeric|gt:0',
-            'minimum_requirements_value'=>'required',
             'starts_at'=>'required',
             'ends_at'=>'required',
         ]);
