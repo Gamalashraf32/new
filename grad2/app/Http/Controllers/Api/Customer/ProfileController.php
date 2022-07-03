@@ -90,6 +90,10 @@ class ProfileController extends Controller
     public function create(Request $request){
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
         $order=Order::find($request->id);
+        $refund = Refund::where('order_id',$request->id)->first();
+        if($refund){
+            return $this->returnError("This order is ". $refund->status,404);
+        }
         if($order){
          Refund::create([
             'shop_id'=>$shop_id,
