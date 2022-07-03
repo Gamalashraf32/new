@@ -28,7 +28,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => [Rule::unique('products', 'name')->where('shop_id' , $shop_id)],
             'description' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric|gt:0',
             'brand' => 'required',
             'images' => 'required',
             'images.*' => 'file|mimes:png,jpg,jpeg|max:4096',
@@ -77,7 +77,7 @@ class ProductController extends Controller
                 Rule::unique('products', 'name')
                     ->where('shop_id' , $shop_id)->ignore($id) ],
             'description' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric|gt:0',
             'brand' => 'required',
         ]);
 
@@ -104,13 +104,13 @@ class ProductController extends Controller
     public function Deleteproductimg($id)
     {
         $shop_id = auth('shop_owner')->user()->shop()->value('id');
-        $product = Product::where('shop_id', $shop_id)->value('id');
-        $product_img = Productimage::where('Product_id', $product)->find($id);
-
-        if (!$product_img) {
+        $product  = Productimage::where('id',$id)->whereHas('product', function ($query) use($shop_id) {
+            $query->where('shop_id',$shop_id);
+        })->first();
+        if (!$product) {
             return $this->returnError('Image not found', 404);
         }
-        $product_img->delete();
+        $product->delete();
 
         return $this->returnSuccess('Image Deleted', 200);
 
