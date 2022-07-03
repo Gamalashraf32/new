@@ -18,7 +18,7 @@ class ShippingController extends Controller
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
             'government' => ['required',Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)],
-            'price' => 'required',
+            'price' => 'required|numeric|gt:0',
             'duration'=>'required'
         ]);
         if ($validator->fails()) {
@@ -43,7 +43,7 @@ class ShippingController extends Controller
         $shop_id =auth('shop_owner')->user()->shop()->first()->id;
         $validator = Validator::make($request->all(), [
             'government' => ['required',Rule::unique('shippings', 'government')->where('shop_id' , $shop_id)->ignore($id)],
-            'price' => 'required',
+            'price' => 'required|numeric|gt:0',
             'duration'=>'required'
         ]);
         if ($validator->fails()) {
