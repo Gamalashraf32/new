@@ -155,7 +155,7 @@ class DiscountCodeController extends Controller
     public function validator(Request $request)
     {
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
-        $discount=DiscountCode::where('shop_id',$shop_id)->where('code',$request->code)->first();
+        $discount=DiscountCode::where('shop_id',$shop_id)->where('code',$request->discounts)->first();
         if($discount)
         {
             $mytime = Carbon::today()->toDateString();

@@ -158,7 +158,7 @@ Route::group(['middleware'=>['check.shop','auth.guard:api',/*'stop.serve'*/],'na
     Route::post('delete_product/{id}', 'CartController@delete_product');
     Route::post('show-cart', 'CartController@show');
     Route::post('place_order', 'CartController@place_order');
-    Route::post('refund_request/{id}', 'ProfileController@create');
+    Route::post('refund_request', 'ProfileController@create');
 
     Route::post('editinfo', 'ProfileController@editinfo');
     Route::get('all-orders', 'ProfileController@showallorders');

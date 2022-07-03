@@ -87,13 +87,13 @@ class ProfileController extends Controller
         return $this->returnData('your shipping info is', $ship->makeHidden(["id","shop_id","updated_at","created_at","duration","price"]), 200);
     }
 
-    public function create(Request $request,$id){
+    public function create(Request $request){
         $shop_id = Shop::where('name', $request->header('shop'))->value('id');
-        $order=Order::find($id);
+        $order=Order::find($request->id);
         if($order){
          Refund::create([
             'shop_id'=>$shop_id,
-            'order_id'=>$id,
+            'order_id'=>$request->id,
             'reason'=>$request->reason
         ]);
         return $this->returnSuccess("Refund is requested",200);
