@@ -20,7 +20,7 @@ class Shopdetails extends Controller
         $shop_owner_id = auth('shop_owner')->user();
 
         $validator = Validator::make($request->all(), [
-            'phone_number' => 'unique:shops|min:11|numeric|gt:0',
+            'phone_number' => 'unique:shops|min:11|numeric',
             'email' =>  'email|unique:shops,email',
         ]);
 
@@ -55,7 +55,7 @@ class Shopdetails extends Controller
                 Rule::unique('shops','email')->ignore($shopid)
             ],
             'shop_phone_number' => [
-                'required|numeric|gt:0|min:11',
+                'required|numeric|min:11',
                 Rule::unique('shops','phone_number')->ignore($shopid),
             ],
             'name' => [

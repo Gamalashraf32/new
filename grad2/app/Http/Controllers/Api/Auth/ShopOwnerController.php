@@ -53,7 +53,7 @@ class ShopOwnerController extends Controller
             'second_name' => 'required|string|min:3|max:255',
             'email' =>  'required|email|unique:shop_owners,email',
             'password' => 'required|confirmed|min:8',
-            'phone_number' => 'required|unique:shop_owners|min:11|numeric|gt:0',
+            'phone_number' => 'required|unique:shop_owners|min:11|numeric',
             'site_name' => 'required|string|min:3|unique:shop_owners',
             'site_address' => 'required',
             'country' => 'required|string|min:3',
