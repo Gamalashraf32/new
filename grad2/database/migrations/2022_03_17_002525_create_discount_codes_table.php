@@ -21,7 +21,6 @@ class CreateDiscountCodesTable extends Migration
             $table->string('code');
             $table->string('type');
             $table->integer('value');
-            $table->integer('minimum_requirements_value')->default('0');
             $table->date('starts_at');
             $table->date('ends_at');
             $table->timestamps();

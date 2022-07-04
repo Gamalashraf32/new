@@ -315,7 +315,7 @@ class OrderController extends Controller
                 $order->save();
                 $refund->save();
                 $user = User::where('id',$order->shop_user_id)->first();
-                $user->increment('balance', $order -> total_price - $order -> shipping_price - $order -> extra_shipping);
+                $user->increment('balance', $order -> total_price);
                 $user->save();
                 return $this->returnSuccess("Order refunded", 200);
             }

@@ -88,7 +88,7 @@ class CRUDCustomerController extends Controller
         $customers = User::where('shop_id', $shop_id)->find($id);
 
         if ($customers) {
-            return $this->returnData('ok', new ShowCustomerByID($customers), 400);
+            return $this->returnData('ok', $customers, 400);
         }
         return $this->returnError('Customers dose not exists', 404);
     }
