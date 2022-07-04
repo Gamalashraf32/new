@@ -19,7 +19,7 @@ class VariantController extends Controller
      {
         $validator = Validator::make($request->all(), [
             'product_id'=>'required',
-            'quantity'=>'required'
+            'quantity'=>'required|numeric|gt:0'
         ]);
         if ($validator->fails()) {
             $errors = [];
